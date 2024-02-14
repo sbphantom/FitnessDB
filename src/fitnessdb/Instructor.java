@@ -1,5 +1,7 @@
 package fitnessdb;
-
+/**
+ * @author Adeola
+ */
 public enum Instructor {
     JENNIFER,
     KIM,
