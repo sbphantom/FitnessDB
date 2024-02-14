@@ -9,8 +9,13 @@ public class Profile implements Comparable<Profile>{
     private Date dob;
 
     @Override
-    public int compareTo() {
-
+    public int compareTo(Profile profile) {
+        if (this.fname.compareTo(profile.fname) != 0) {
+            return this.fname.compareTo(profile.fname);
+        } else if(this.lname.compareTo(profile.lname) != 0){
+            return this.lname.compareTo(profile.lname);
+        }
+        else return this.dob.compareTo(profile.dob);
     }
 
     @Override
