@@ -1,6 +1,15 @@
 package fitnessdb;
 
 public enum Location {
+    BRIDGEWATER,
+    EDISON,
+    FRANKLIN,
+    PISCATAWAY,
+    SOMERVILLE;
+
+
+
+    /*
     BRIDGEWATER {
         public String toString() {
             return "Bridgewater, 08807, Somerset County";
@@ -30,7 +39,7 @@ public enum Location {
             return "Somerville, 08876, Somerset County";
         }
     }
-
+    */
 
 }
 
