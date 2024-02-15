@@ -6,7 +6,17 @@ public class Member implements Comparable<Member> {
     private Profile profile;
     private Date expire;
     private Location homeStudio;
-    public double bill() { } //return the next due amount
+    
+    public Member(Profile profile, Date expire, Location homeStudio){
+        this.profile = profile; 
+        this.expire = expire; 
+        this.homeStudio = homeStudio; 
+    }
+    
+    
+    public double bill() {
+        return 0.0; 
+     } //return the next due amount
 
     @Override
     public int compareTo(Member member) {
@@ -29,13 +39,7 @@ public class Member implements Comparable<Member> {
     @Override
     public String toString() {
         String location = "";
-        switch (homeStudio){
-            case EDISON: location = "Edison, 08837, Middlesex County";
-            case BRIDGEWATER: location = "Bridgewater, 08807, Somerset County";
-            case SOMERVILLE: location = "Somerville, 08876, Somerset County";
-            case FRANKLIN: location = "Franklin, 08873, Somerset County";
-            case PISCATAWAY: location = "Piscataway, 08854, Middlesex County";
-        }
+        location =  String.format("%s, %s, %s", homeStudio.name(), homeStudio.getZipCode(), homeStudio.getCounty()); 
         return String.format("%s, Membership expires %s, Location: %s", this.profile.toString(), this.expire.toString(), location);
     }
 

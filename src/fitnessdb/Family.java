@@ -5,8 +5,10 @@ package fitnessdb;
 public class Family extends Member{
     private boolean guest;
 
+    private final double FAMILYPRICE = 49.99; 
+    
     @Override
     public double bill() {
-        //return super.bill();
-    }
+        return FAMILYPRICE; 
+    };
 }
