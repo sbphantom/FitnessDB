@@ -1,4 +1,8 @@
 package fitnessdb;
+
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author Adeola Asimolowo, Danny Onurah
  */
@@ -34,7 +38,21 @@ public class MemberList {
             return true;
         }
     }
-    public boolean remove(Member member) { }
+    public boolean remove(Member member) {
+        if (size == 0 || !contains(member)) return false;
+
+        int index = find(member);
+        if (index == size - 1) {
+            members[index] = null;
+        } else {
+            for (int i = index; i < size - 1; i++) {
+                members[i] = members[i + 1];
+            }
+            members[size - 1] = null;
+        }
+        size--;
+        return true;
+    }
     public void load(File file) throws IOException { }//from the text file
     public void printByCounty() { } //sort by county then zip code
     public void printByMember() { } //sort by member profile

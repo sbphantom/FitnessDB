@@ -1,5 +1,7 @@
 package fitnessdb;
 
+import static fitnessdb.Location.EDISON;
+
 public class Member implements Comparable<Member> {
     private Profile profile;
     private Date expire;
@@ -7,8 +9,13 @@ public class Member implements Comparable<Member> {
     public double bill() { } //return the next due amount
 
     @Override
-    public int compareTo() {
-
+    public int compareTo(Member member) {
+        if(this.profile.compareTo( member.profile) !=0){
+            return this.profile.compareTo( member.profile);
+        } else if (this.expire.compareTo(member.expire) !=0) {
+            return this.expire.compareTo(member.expire);
+        }
+        else return this.homeStudio.compareTo(member.homeStudio);
     }
 
     @Override
@@ -21,7 +28,15 @@ public class Member implements Comparable<Member> {
 
     @Override
     public String toString() {
-        return String.format("%s, Membership expires %s, Location:", this.profile.toString(), this.expire.toString());
+        String location = "";
+        switch (homeStudio){
+            case EDISON: location = "Edison, 08837, Middlesex County";
+            case BRIDGEWATER: location = "Bridgewater, 08807, Somerset County";
+            case SOMERVILLE: location = "Somerville, 08876, Somerset County";
+            case FRANKLIN: location = "Franklin, 08873, Somerset County";
+            case PISCATAWAY: location = "Piscataway, 08854, Middlesex County";
+        }
+        return String.format("%s, Membership expires %s, Location: %s", this.profile.toString(), this.expire.toString(), location);
     }
 
 
