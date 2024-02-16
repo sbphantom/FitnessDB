@@ -1,7 +1,10 @@
 package fitnessdb;
 /**
- * @author Adeola
+ * An instance of this class holds a list of fitness classes loaded from the text file
+ * classSchedule.txt.
+ * @author Adeola Asimolowo
  */
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
