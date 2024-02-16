@@ -43,5 +43,27 @@ public class Member implements Comparable<Member> {
         return String.format("%s, Membership expires %s, Location: %s", this.profile.toString(), this.expire.toString(), location);
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
 
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public Date getExpire() {
+        return expire;
+    }
+
+    public void setExpire(Date expire) {
+        this.expire = expire;
+    }
+
+    public Location getHomeStudio() {
+        return homeStudio;
+    }
+
+    public void setHomeStudio(Location homeStudio) {
+        this.homeStudio = homeStudio;
+    }
 }

@@ -58,13 +58,78 @@ public class MemberList {
         return true;
     }
 
-    public void sort(String sortBy){
-        
+    /**
+     * Sorts the collection based on a given parameter
+     *
+     * @param sortBy sorts collection by given string
+     *               options are "release", "genre", and "rating"
+     *               defaults to album title
+     */
+    private void sort(String sortBy) {
+        for (int i = 1; i < size; ++i) {
+            Member key = members[i];
+            int j = i - 1;
+
+            while (j >= 0 && compareMember(members[j], key, sortBy) > 0) {
+                members[j + 1] = members[j];
+                j = j - 1;
+            }
+            members[j + 1] = key;
+        }
     }
 
 
-    public void load(File file) throws IOException { }//from the text file
-    public void printByCounty() { } //sort by county then zip code
-    public void printByMember() { } //sort by member profile
+    /**
+     * Compares two albums based on a given param
+     *
+     * @param m1        first member to compare to
+     * @param m2        second member to compare against
+     * @param compareBy what to compare by
+     *                  options are "county", "member", and "fees"
+     *                  defaults to album title
+     */
+    private double compareMember(Member m1, Member m2, String compareBy) {
+        return switch (compareBy) {
+            case "county" -> {
+                if (m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty())  == 0) {
+                    yield  m1.getHomeStudio().getZipCode().compareTo(m2.getHomeStudio().getZipCode());
+                } else {
+                    yield m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty();
+                }
+            }
+            case "member" -> m1.getProfile().compareTo(m2.getProfile());
+
+            default -> 0.0;
+        };
+    }
+
+
+    public void load(File file) throws IOException { }//from the text file'
+
+    //sort by county then zip code
+    public void printByCounty() {
+        sort("county");
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"-list of members sorted by county/zipcode-\n");
+
+        for (int i = 0; i < size; i++) {
+            sb.append(members[i]).append("\n");
+        }
+        sb.append("* end of list *");
+        System.out.println(sb.toString());
+    }
+
+    //sort by member profile
+    public void printByMember() {
+        sort("member");
+        StringBuilder sb = new StringBuilder();
+        sb.append("-list of members sorted by member profiles-\n");
+
+        for (int i = 0; i < size; i++) {
+            sb.append(members[i]).append("\n");
+        }
+        sb.append("* end of list *");
+        System.out.println(sb.toString());
+    }
     public void printByFees() {} //print the array as is with the next due amounts
 }
