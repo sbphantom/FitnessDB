@@ -7,4 +7,6 @@ public class FitnessClass {
     private Time time;
     private MemberList members;
     private MemberList guests;
+
+    
 }

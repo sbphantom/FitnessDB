@@ -20,6 +20,7 @@ public class MemberList {
         }
         return NOT_FOUND;
     }
+
     private void grow() {
         Member[] newArray = new Member[size + PARTITION_SIZE];
         for (int i = 0; i < size; i++) {
@@ -28,7 +29,9 @@ public class MemberList {
         members = newArray;
 
     }
+
     public boolean contains(Member member) { return find(member) != NOT_FOUND; }
+
     public boolean add(Member member) {
         if (contains(member)) return false;
         else {
@@ -38,6 +41,7 @@ public class MemberList {
             return true;
         }
     }
+
     public boolean remove(Member member) {
         if (size == 0 || !contains(member)) return false;
 
@@ -53,7 +57,14 @@ public class MemberList {
         size--;
         return true;
     }
+
+    public void sort(String sortBy){
+        
+    }
+
+
     public void load(File file) throws IOException { }//from the text file
     public void printByCounty() { } //sort by county then zip code
     public void printByMember() { } //sort by member profile
+    public void printByFees() {} //print the array as is with the next due amounts
 }

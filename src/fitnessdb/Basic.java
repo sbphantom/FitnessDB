@@ -4,9 +4,24 @@ package fitnessdb;
  */
 public class Basic extends Member{
     private  int numClasses;
+    private final double BASICPRICE = 39.99; 
+    
+    public Basic(Profile profile, Date expire, Location homeStudio) {
+        super(profile, expire, homeStudio);
+        //TODO Auto-generated constructor stub
+    }
 
     @Override
     public double bill() {       
-        return 39.99; 
+        return BASICPRICE;  
     }
+
+    public int  getNumClasses(){
+        return this.numClasses; 
+    }
+
+    public void setNumClasses(int numClasses){
+        this.numClasses = numClasses; 
+    }
+
 }
