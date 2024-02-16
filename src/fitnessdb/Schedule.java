@@ -1,9 +1,9 @@
 package fitnessdb;
 
-import java.io.BufferedReader;
+
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Schedule {
     private FitnessClass [] classes;
@@ -14,24 +14,18 @@ public class Schedule {
         this.numClasses = numClasses; 
     }
     public void load(File file) throws IOException {
-        BufferedReader reader = null;
+        Scanner scanner = null;
         try {
-            reader = new BufferedReader(new FileReader(file));
-            String line;
+            scanner = new Scanner(file);
             int index = 0;
-            while ((line = reader.readLine()) != null && index < numClasses) {
-                // Assuming each line represents a FitnessClass, parse the line and create FitnessClass objects
+            while (scanner.hasNextLine() && index < numClasses) {
+                String line = scanner.nextLine();
                 classes[index] = parseFitnessClass(line);
                 index++;
             }
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    System.err.println("Error closing reader: " + e.getMessage());
-                    e.printStackTrace();
-                }
+            if (scanner != null) {
+                scanner.close();
             }
         }
     }
