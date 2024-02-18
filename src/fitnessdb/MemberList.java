@@ -104,7 +104,9 @@ public class MemberList {
     }
 
 
-    public void load(File file) throws IOException { }//from the text file'
+    public void load(File file) throws IOException {
+
+    }//from the text file'
 
     //sort by county then zip code
     public void printByCounty() {

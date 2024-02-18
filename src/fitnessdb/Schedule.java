@@ -22,9 +22,11 @@ public class Schedule {
         try {
             scanner = new Scanner(file);
             int index = 0;
-            while (scanner.hasNextLine() && index < numClasses) {
+            while (scanner.hasNextLine() ) {
                 String line = scanner.nextLine();
-                classes[index] = parseFitnessClass(line);
+                if(line.trim().isEmpty()){ break; }
+                this.classes[index] = parseFitnessClass(line);
+                this.numClasses++;
                 index++;
             }
         } finally {
@@ -33,7 +35,6 @@ public class Schedule {
             }
         }
     }
-
 
     private FitnessClass parseFitnessClass(String line) {
         // Implement parsing logic here based on your file format
@@ -48,7 +49,25 @@ public class Schedule {
         // Create and return a new FitnessClass object
         return new FitnessClass(offer, instructorName, country, classTime, null, null);
     }
+
+    public FitnessClass[] getClasses() {
+        return classes;
+    }
+
+    public void setClasses(FitnessClass[] classes) {
+        this.classes = classes;
+    }
+
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < classes.length; i++){
+            FitnessClass class = classes[i];
+            sb.append(String.format("%s - %s, %s, %s", ));
+        }
+    }
 }
 
 
-}
+
