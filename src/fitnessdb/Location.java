@@ -1,3 +1,7 @@
+/**
+ * Enum class defining the studio locations
+ * @author Adeola
+ */
 package fitnessdb;
 
 public enum Location {

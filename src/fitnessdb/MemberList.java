@@ -94,7 +94,7 @@ public class MemberList {
                 if (m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty())  == 0) {
                     yield  m1.getHomeStudio().getZipCode().compareTo(m2.getHomeStudio().getZipCode());
                 } else {
-                    yield m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty();
+                    yield m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty());
                 }
             }
             case "member" -> m1.getProfile().compareTo(m2.getProfile());
@@ -122,6 +122,8 @@ public class MemberList {
             }
         }
     }//from the text file
+
+    public int getSize(){return  this.size;}
 
     private Member parseMember(String line) {
         // Implement parsing logic here based on your file format
