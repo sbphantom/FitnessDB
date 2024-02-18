@@ -9,6 +9,7 @@ public class Basic extends Member{
     public Basic(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
         //TODO Auto-generated constructor stub
+        this.numClasses = 0;
     }
 
     @Override

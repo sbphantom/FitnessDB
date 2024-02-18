@@ -1,4 +1,7 @@
 package fitnessdb;
+
+import java.util.Calendar;
+
 /**
  * @author Adeola
  */
@@ -10,12 +13,14 @@ public class Family extends Member{
     public Family(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
         //TODO Auto-generated constructor stub
+        this.guest = !expire.isExpired();
+
     }
 
     @Override
     public double bill() {
         return FAMILYPRICE; 
-    };
+    }
 
     public boolean getGuest(){
         return this.guest; 

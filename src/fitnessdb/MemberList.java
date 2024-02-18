@@ -2,6 +2,8 @@ package fitnessdb;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.runtime.SwitchBootstraps;
+import java.util.Scanner;
 
 /**
  * @author Adeola Asimolowo, Danny Onurah
@@ -23,9 +25,7 @@ public class MemberList {
 
     private void grow() {
         Member[] newArray = new Member[size + PARTITION_SIZE];
-        for (int i = 0; i < size; i++) {
-            newArray[i] = members[i];
-        }
+        if (size >= 0) System.arraycopy(members, 0, newArray, 0, size);
         members = newArray;
 
     }
@@ -105,8 +105,53 @@ public class MemberList {
 
 
     public void load(File file) throws IOException {
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+            int index = 0;
+            while (scanner.hasNextLine() ) {
+                String line = scanner.nextLine();
+                if(line.trim().isEmpty()){ break; }
+                this.members[index] = parseMember(line);
+                this.size++;
+                index++;
+            }
+        } finally {
+            if (scanner != null) {
+                scanner.close();
+            }
+        }
+    }//from the text file
 
-    }//from the text file'
+    private Member parseMember(String line) {
+        // Implement parsing logic here based on your file format
+        // For example, split the line by a delimiter and extract relevant information
+        String[] parts = line.split("\\s+");
+
+        String memberType = parts[0];
+        String fname = parts[1];
+        String lname = parts[2];
+        Date dob = dateBuilder(parts[3].split("/"));
+        Date expire = dateBuilder(parts[4].split("/"));
+        Location homestudio = Location.valueOf(parts[5]);
+
+        Profile profile = new Profile(fname, lname, dob);
+        return switch (memberType) {
+            case "B" -> new Basic(profile, expire, homestudio);
+            case "F" -> new Family(profile, expire, homestudio);
+            case "P" -> new Premium(profile, expire, homestudio);
+            default -> null;
+        };
+
+    }
+    private Date dateBuilder(String[] dateEntry) {
+        int[] result = new int[dateEntry.length];
+        for (int i = 0; i < dateEntry.length; i++) {
+            result[i] = Integer.parseInt(dateEntry[i]);
+        }
+        return new Date(result[2], result[0], result[1]);
+    }
+
 
     //sort by county then zip code
     public void printByCounty() {
@@ -118,7 +163,7 @@ public class MemberList {
             sb.append(members[i]).append("\n");
         }
         sb.append("* end of list *");
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 
     //sort by member profile
@@ -131,7 +176,7 @@ public class MemberList {
             sb.append(members[i]).append("\n");
         }
         sb.append("* end of list *");
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
     public void printByFees() {} //print the array as is with the next due amounts
 }

@@ -18,11 +18,11 @@ public class FitnessClass {
     }
 
 
-    public Offer getClassInfo() {
+    public Offer getOffer() {
         return classInfo;
     }
 
-    public void setClassInfo(Offer classInfo) {
+    public void setOffer(Offer classInfo) {
         this.classInfo = classInfo;
     }
 

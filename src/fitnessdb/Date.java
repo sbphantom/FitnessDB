@@ -122,6 +122,13 @@ public class Date implements Comparable<Date> {
         }
     }
 
+    public boolean isExpired(){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // Months start from 0, so we add 1
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        return compareTo(new Date(year, month, dayOfMonth)) <= 0; //true if date is expired, false if not.
+    }
     /**
      * A main method for testing the Date class.
      *

@@ -7,5 +7,5 @@ public enum Instructor {
     KIM,
     DENISE,
     DAVIS,
-    EMMA;
+    EMMA
 }

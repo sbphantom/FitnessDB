@@ -62,10 +62,11 @@ public class Schedule {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < classes.length; i++){
-            FitnessClass class = classes[i];
-            sb.append(String.format("%s - %s, %s, %s", ));
+        for (FitnessClass aClass : classes) {
+            sb.append(String.format("%s - %s, %s, %s", aClass.getOffer().toString(), aClass.getInstructor().toString(), aClass.getTime().toString(), aClass.getStudio().toString()));
         }
+
+        return sb.toString();
     }
 }
 

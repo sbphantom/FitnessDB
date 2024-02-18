@@ -10,6 +10,9 @@ public class Premium extends Member {
     public Premium(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
         //TODO Auto-generated constructor stub
+        if(expire.isExpired()){ this.guestPass = Integer.parseInt(null);}
+        else {this.guestPass = 0;}
+
     }
 
     @Override
