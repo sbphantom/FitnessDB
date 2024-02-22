@@ -1,6 +1,8 @@
 package fitnessdb;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.io.File;
 public class MemberListTest {
 
     @Test
@@ -20,7 +22,7 @@ public class MemberListTest {
     @Test
     public void testRemove() {
         MemberList memberList = new MemberList();
-        memberList.load();
+        memberList.load(new File("src//fitnessdb//memberList.txt"));
         Member member1 = new Member(new Profile("Adedoyin", "Adebayo", new Date(2005, 8 , 8)), new Date(2025, 8, 25), Location.PISCATAWAY);
         Member member2 = new Member(new Profile("Daniel","Ghost", new Date(1998, 11, 15 )), new Date(2024 , 12, 29), Location.BRIDGEWATER);
 
