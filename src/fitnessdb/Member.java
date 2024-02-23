@@ -7,14 +7,17 @@ public class Member implements Comparable<Member> {
     private Date expire;
     private Location homeStudio;
 
-    
-    public Member(Profile profile, Date expire, Location homeStudio){
-        this.profile = profile; 
-        this.expire = expire; 
-        this.homeStudio = homeStudio; 
+    public Member(Profile profile){
+        this.profile = profile;
     }
-    
-    
+    public Member(Profile profile, Date expire, Location homeStudio){
+        this.profile = profile;
+        this.expire = expire;
+        this.homeStudio = homeStudio;
+    }
+
+
+
     public double bill() {
         return 0.0; 
      } //return the next due amount
@@ -32,7 +35,10 @@ public class Member implements Comparable<Member> {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Member member){
-            return this.profile.equals(member.profile) && this.expire.equals(member.expire) && this.homeStudio.equals(member.homeStudio);
+            if (this.profile.equals(member.profile) && member.getClass().equals(Member.class)){
+                return true;
+            }
+            return this.profile.equals(member.profile) && this.getClass().equals(member.getClass());
         }
         return false;
     }
