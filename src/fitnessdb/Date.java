@@ -43,6 +43,18 @@ public class Date implements Comparable<Date> {
         this.year = Integer.parseInt(nums[2]);
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
     public Date addDays(int days) {
         GregorianCalendar calendar = new GregorianCalendar(this.year, this.month - 1, this.day);
         calendar.add(Calendar.DAY_OF_MONTH, days);
@@ -130,7 +142,7 @@ public class Date implements Comparable<Date> {
      * @param day   The day to be checked.
      * @return True if the date is valid; otherwise, false.
      */
-    public boolean isValid(int year, int month, int day) {
+    public boolean isValid() {
         if (year < MIN_YEAR || month < 1 || day < 1 || month > NUM_OF_MONTHS || day > MAX_DAYS) {
             return false;
         }
