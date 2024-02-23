@@ -20,6 +20,14 @@ public class FitnessClass {
         this.guests = guests;
     }
 
+    public FitnessClass(Offer classInfo, Instructor instructor, Location studio, Time time) {
+        this.classInfo = classInfo;
+        this.instructor = instructor;
+        this.studio = studio;
+        this.time = time;
+
+    }
+
 
     public Offer getOffer() {
         return classInfo;
@@ -69,7 +77,11 @@ public class FitnessClass {
         this.guests = guests;
     }
     
-    
+    @Override
+    public String toString(){
+        return String.format("%s - %s, %d:%02d, %s", classInfo, instructor, time.getHour(),time.getMinute(), studio.name());
+    }
+
 public static void main(String[] args) {
     Offer offer = Offer.PILATES; 
     Instructor instructor = Instructor.EMMA; 
