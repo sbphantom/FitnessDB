@@ -3,7 +3,7 @@ package fitnessdb;
  * @author Adeola
  */
 public class Basic extends Member{
-    private  int numClasses;
+    private int numClasses;
     private final double BASICPRICE = 39.99; 
     
     public Basic(Profile profile, Date expire, Location homeStudio) {
@@ -23,6 +23,11 @@ public class Basic extends Member{
 
     public void setNumClasses(int numClasses){
         this.numClasses = numClasses; 
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s, Membership expires %s, Home Studio: %s, (Basic) number of classes attended: %d", this.getProfile(), this.getExpire(), this.getHomeStudio(), this.getNumClasses());
     }
 
 }
