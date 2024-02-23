@@ -16,6 +16,20 @@ public enum Time {
         this.minute = minute;
     }
 
+    public static Time getTime(String name){
+        if (name.toUpperCase().equals(MORNING.name())){
+            return MORNING;
+        }
+        else if (name.toUpperCase().equals(AFTERNOON.name())){
+            return AFTERNOON;
+        }
+        else if (name.toUpperCase().equals(EVENING.name())){
+            return EVENING;
+        }
+        else{
+            return null;
+        }
+    }
     public int getHour() {
         return hour;
     }
