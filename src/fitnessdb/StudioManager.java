@@ -30,13 +30,22 @@ public class StudioManager {
     */
     //AB John Doe 1/20/2003 BRIDGEWATER
     private String commandAB(String input){
+        String[] response = input.split(" ");
+        String fname = response[1];
+        String lname = response[2];
+        Date dob = new Date(response[3]);
+        Location location = Location.getLocation(response[4]);
+        Profile profile = new Profile(fname, lname, dob);
+        Basic member = new Basic(profile, Date.todayDate().addMonths(3), location);
+        memberlist.add(member);
 
-//        Member temp = new Member(new Profile(fname, lname, dob), expire, homeStudio);
+
         return null;
     }
 
     //AF Jerry Brown 6/30/2007 Edison
     private String commandAF(String input){
+
         return null;
     }
 
