@@ -30,34 +30,116 @@ public class StudioManager {
     */
     //AB John Doe 1/20/2003 BRIDGEWATER
     private String commandAB(String[] response) {
-//        String[] response = input.split(" ");
         String fname = response[1];
         String lname = response[2];
-        Date dob = new Date(response[3]);
-        Location location = Location.getLocation(response[4]);
-
-
+        Date dob;
+        try {
+            dob = new Date(response[3]);
+        } catch (NumberFormatException e) {
+            return "The date contains characters.";
+        }        Location location = Location.getLocation(response[4]);
         Profile profile = new Profile(fname, lname, dob);
-        Basic member = new Basic(profile, Date.todayDate().addMonths(3), location);
-        memberlist.add(member);
 
-        return null;
+        if (!dob.isValid()) {
+            return String.format("DOB %s: invalid calendar date!", dob);
+        } else if (dob.compareTo(Date.todayDate()) >= 0) {
+            return String.format("DOB %s: cannot be today or a future date!", dob);
+        } else if (profile.isMinor()) {
+            return String.format("DOB %s: must be 18 or older to join!", dob);
+        }
+        if (location == null) {
+            return String.format("%s: invalid studio location!", response[4]);
+        }
+
+        Basic member = new Basic(profile, Date.todayDate().addMonths(1), location);
+
+        if (memberlist.add(member)) {
+            return String.format("%s %s added.", fname, lname);
+        } else
+            return String.format("%s %s is already in the member database.", fname, lname);
     }
 
     //AF Jerry Brown 6/30/2007 Edison
-    private String commandAF(String input) {
+    private String commandAF(String[] response) {
+        String fname = response[1];
+        String lname = response[2];
+        Date dob;
+        try {
+            dob = new Date(response[3]);
+        } catch (NumberFormatException e) {
+            return "The date contains characters.";
+        }        Location location = Location.getLocation(response[4]);
+        Profile profile = new Profile(fname, lname, dob);
 
-        return null;
+        if (!dob.isValid()) {
+            return String.format("DOB %s: invalid calendar date!", dob);
+        } else if (dob.compareTo(Date.todayDate()) >= 0) {
+            return String.format("DOB %s: cannot be today or a future date!", dob);
+        } else if (profile.isMinor()) {
+            return String.format("DOB %s: must be 18 or older to join!", dob);
+        }
+        if (location == null) {
+            return String.format("%s invalid studio location!", response[4]);
+        }
+
+        Family member = new Family(profile, Date.todayDate().addMonths(3), location);
+
+        if (memberlist.add(member)) {
+            return String.format("%s %s added.", fname, lname);
+        } else
+            return String.format("%s %s is already in the member database.", fname, lname);
     }
 
     //AP Jonnathan Wei 9/21/2006 bridgewater
-    private String commandAP(String input) {
-        return null;
+    private String commandAP(String[] response) {
+        String fname = response[1];
+        String lname = response[2];
+        Date dob;
+        try {
+            dob = new Date(response[3]);
+        } catch (NumberFormatException e) {
+            return "The date contains characters.";
+        }        Location location = Location.getLocation(response[4]);
+        Profile profile = new Profile(fname, lname, dob);
+
+        if (!dob.isValid()) {
+            return String.format("DOB %s: invalid calendar date!", dob);
+        } else if (dob.compareTo(Date.todayDate()) >= 0) {
+            return String.format("DOB %s: cannot be today or a future date!", dob);
+        } else if (profile.isMinor()) {
+            return String.format("DOB %s: must be 18 or older to join!", dob);
+        }
+        if (location == null) {
+            return String.format("%s invalid studio location!", response[4]);
+        }
+
+        Premium member = new Premium(profile, Date.todayDate().addYears(1), location);
+
+        if (memberlist.add(member)) {
+            return String.format("%s %s added.", fname, lname);
+        } else
+            return String.format("%s %s is already in the member database.", fname, lname);
     }
 
     //C Bill Scanlan 5/1/1999
-    private String commandC(String input) {
-        return null;
+    private String commandC(String[] response) {
+
+        String fname = response[1];
+        String lname = response[2];
+        Date dob;
+        try {
+            dob = new Date(response[3]);
+        } catch (NumberFormatException e) {
+            return "The date contains characters.";
+        }
+        Profile profile = new Profile(fname, lname, dob);
+
+        Member member = new Member(profile);
+
+        if (memberlist.remove(member)) {
+            return String.format("%s %s removed.", fname, lname);
+        } else
+            return String.format("%s %s is not in the member database.", fname, lname);
     }
 
     //S
@@ -105,14 +187,25 @@ public class StudioManager {
         String command = request[0];
         return switch (command) {
             case "AB" -> {
-                if (request.length == 3) {
+                if (request.length == 5) {
                     yield commandAB(request);
-                }
-                else yield null;
+                } else yield "Missing data tokens.";
             }
-            case "AF" -> commandAF(inputString);
-            case "AP" -> commandAP(inputString);
-            case "C" -> commandC(inputString);
+            case "AF" -> {
+                if (request.length == 5) {
+                    yield commandAF(request);
+                } else yield "Missing data tokens.";
+            }
+            case "AP" -> {
+                if (request.length == 5) {
+                    yield commandAP(request);
+                } else yield "Missing data tokens.";
+            }
+            case "C" -> {
+                if (request.length == 4) {
+                    yield commandC(request);
+                } else yield "Missing data tokens.";
+            }
             case "S" -> commandS();
             case "PM" -> commandPM();
             case "PC" -> commandPC();
