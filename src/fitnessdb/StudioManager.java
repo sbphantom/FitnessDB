@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 public class StudioManager {
     private MemberList memberlist = new MemberList();
-    priva
+
     private Schedule schedule = new Schedule();
     private final Date CURRENTDate = Date.todayDate();
 
