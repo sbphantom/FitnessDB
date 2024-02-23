@@ -2,7 +2,6 @@ package fitnessdb;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.runtime.SwitchBootstraps;
 import java.util.Scanner;
 
 /**
