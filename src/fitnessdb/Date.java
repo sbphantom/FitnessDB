@@ -43,6 +43,29 @@ public class Date implements Comparable<Date> {
         this.year = Integer.parseInt(nums[2]);
     }
 
+    public Date addDays(int days) {
+        GregorianCalendar calendar = new GregorianCalendar(this.year, this.month - 1, this.day);
+        calendar.add(Calendar.DAY_OF_MONTH, days);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        return new Date(year, month, day);
+    }
+
+    public Date addMonths(int months) {
+        GregorianCalendar calendar = new GregorianCalendar(this.year, this.month - 1, this.day);
+        calendar.add(Calendar.MONTH, months);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        return new Date(year, month, day);
+    }
+
+    public Date addYears(int years) {
+        return new Date(this.year + years, this.month, this.day);
+    }
+
+
 
     /**
      * Returns the current date as a Date object.
