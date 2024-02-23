@@ -29,78 +29,87 @@ public class StudioManager {
    Q - Stop program
     */
     //AB John Doe 1/20/2003 BRIDGEWATER
-    private String commandAB(String input){
-        String[] response = input.split(" ");
+    private String commandAB(String[] response) {
+//        String[] response = input.split(" ");
         String fname = response[1];
         String lname = response[2];
         Date dob = new Date(response[3]);
         Location location = Location.getLocation(response[4]);
+
+
         Profile profile = new Profile(fname, lname, dob);
         Basic member = new Basic(profile, Date.todayDate().addMonths(3), location);
         memberlist.add(member);
-
 
         return null;
     }
 
     //AF Jerry Brown 6/30/2007 Edison
-    private String commandAF(String input){
+    private String commandAF(String input) {
 
         return null;
     }
 
     //AP Jonnathan Wei 9/21/2006 bridgewater
-    private String commandAP(String input){
+    private String commandAP(String input) {
         return null;
     }
 
     //C Bill Scanlan 5/1/1999
-    private String commandC(String input){
+    private String commandC(String input) {
         return null;
     }
 
     //S
-    private String commandS(){
+    private String commandS() {
         return null;
     }
 
     //PM
-    private String commandPM(){
+    private String commandPM() {
         return null;
     }
 
     //PC
-    private String commandPC(){
+    private String commandPC() {
         return null;
     }
 
     //PF
-    private String commandPF(){
+    private String commandPF() {
         return null;
     }
 
     //R cardio Jennifer somerville Roy Brooks 8/8/1977
-    private String commandR(String input){
+    private String commandR(String input) {
         return null;
     }
 
     //U Pilates KIM FRANKLIN Mary Lindsey 12/1/1989
-    private String commandU(String input){
+    private String commandU(String input) {
         return null;
     }
 
     //RG Pilates Jennifer Bridgewater Mary Lindsey 12/1/1989
-    private String commandRG(String input){
-        return null;
-    }
-    //UG pilates davis Edison Jerry Brown 6/30/1979
-    private String commandUG(String input){
+    private String commandRG(String input) {
         return null;
     }
 
-    private String commandHandler(String command, String inputString) {
+    //UG pilates davis Edison Jerry Brown 6/30/1979
+    private String commandUG(String input) {
+        return null;
+    }
+
+    private String commandHandler(String inputString) {
+        String[] request = inputString.split(" ");
+        String command = request[0];
         return switch (command) {
-            case "AB" -> commandAB(inputString);
+            case "AB" -> {
+                if (request.length == 3) {
+                    yield commandAB(request);
+                }
+                else yield null;
+            }
             case "AF" -> commandAF(inputString);
             case "AP" -> commandAP(inputString);
             case "C" -> commandC(inputString);
@@ -120,34 +129,32 @@ public class StudioManager {
 //                }
 //            }
 
-            default -> "Invalid command!";
+            default -> String.format("%s is an invalid command!", command);
         };
     }
 
-    private void loadMembers(File file){
+    private void loadMembers(File file) {
         try {
             memberlist.load(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             System.out.println("-list of members loaded-");
-            for (Member m : memberlist.getMembers()){
+            for (Member m : memberlist.getMembers()) {
                 if (m != null) System.out.println(m);
             }
             System.out.println("-end of list-\n\n");
         }
     }
 
-    private void loadSchedule(File file){
+    private void loadSchedule(File file) {
         try {
             schedule.load(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             System.out.println("-Fitness classes loaded-");
-            for (FitnessClass f : schedule.getClasses()){
+            for (FitnessClass f : schedule.getClasses()) {
                 if (f != null) System.out.println(f);
             }
             System.out.println("-end of class list.\n");
@@ -174,7 +181,7 @@ public class StudioManager {
                 break;
             }
 
-//            System.out.println(commandHandler(commandSelect(line), line, mainCollection));
+            System.out.println(commandHandler(line));
 
         }
     }
