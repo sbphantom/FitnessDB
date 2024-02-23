@@ -31,12 +31,18 @@ public class Date implements Comparable<Date> {
      * @param day   The day number.
      */
     public Date(int year, int month, int day) {
-        if (isValid(year, month, day)) {
-            this.year = year;
-            this.month = month;
-            this.day = day;
-        }
+        this.year = year;
+        this.month = month;
+        this.day = day;
     }
+
+    public Date(String date) {
+        String[] nums = date.split("/");
+        this.month = Integer.parseInt(nums[0]);
+        this.day = Integer.parseInt(nums[1]);
+        this.year = Integer.parseInt(nums[2]);
+    }
+
 
     /**
      * Returns the current date as a Date object.
