@@ -6,6 +6,7 @@ public class Member implements Comparable<Member> {
     private Profile profile;
     private Date expire;
     private Location homeStudio;
+
     
     public Member(Profile profile, Date expire, Location homeStudio){
         this.profile = profile; 
@@ -40,7 +41,7 @@ public class Member implements Comparable<Member> {
     public String toString() {
         String location = "";
         location =  String.format("%s, %s, %s", homeStudio.name(), homeStudio.getZipCode(), homeStudio.getCounty()); 
-        return String.format("%s, Membership expires %s, Location: %s", this.profile.toString(), this.expire.toString(), location);
+        return String.format("%s, Membership expires %s, Home Studio: %s", this.profile.toString(), this.expire.toString(), location);
     }
 
     public Profile getProfile() {
@@ -67,6 +68,10 @@ public class Member implements Comparable<Member> {
         this.homeStudio = homeStudio;
     }
 
+    public boolean isExpired(){
+        return (expire.compareTo(Date.todayDate()) < 0);
+    }
+
     //TestBed
     public static void main(String[] args) {
 
@@ -74,7 +79,7 @@ public class Member implements Comparable<Member> {
         Member familyMember = new Family(new Profile("Carl", "Brown", new Date(1991, 10, 7 )), new Date ( 2024, 3, 31), Location.PISCATAWAY);
         Member premuimMember = new Premium(new Profile("Saul", "Goodman", new Date(1999, 5, 1)), new Date ( 2024, 1, 25), Location.BRIDGEWATER);
 
-        System.out.println(basicMember.equals(familyMember); //False
+//        System.out.println(basicMember.equals(familyMember); //False
 
     }
 }
