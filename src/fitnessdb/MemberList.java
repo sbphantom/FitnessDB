@@ -6,6 +6,8 @@ import java.lang.runtime.SwitchBootstraps;
 import java.util.Scanner;
 
 /**
+ * This is an array-based implementation of a linear data structure to hold a list of member
+ * objects.
  * @author Adeola Asimolowo, Danny Onurah
  */
 public class MemberList {

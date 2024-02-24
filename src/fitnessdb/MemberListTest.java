@@ -12,7 +12,7 @@ public class MemberListTest {
     @Test
     public void testAdd() {
         MemberList memberList = new MemberList();
-        memberList.load();
+        memberList.load(new File("src//fitnessdb//memberList.txt"));
 
         Member member1 = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5 , 8)), new Date(2025, 8, 25), Location.SOMERVILLE);
         Member member2 = new Premium(new Profile("Danny","Phantom", new Date(2003, 9, 12 )), new Date(2024 , 12, 29), Location.EDISON);
@@ -23,6 +23,11 @@ public class MemberListTest {
         assertTrue(memberList.add(member3));
         assertEquals(15, memberList.getSize()); // Check if size is 15
 
+        Member x = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5 , 32)), new Date(2025, 8, 25), Location.SOMERVILLE); // Incorrect born date.
+        Member y = new Premium(new Profile("Danny","Phantom", new Date(2003, 9, 12 )), new Date(2024 , 12, 29), Location.EDISON);
+        Member z = new Family(new Profile("John", "Doe", new Date(1987, 4, 13)),  new Date(2024 , 5, 7), Location.BRIDGEWATER);
+
+        assertFalse(memberList.add());
     }
 
     @Test
