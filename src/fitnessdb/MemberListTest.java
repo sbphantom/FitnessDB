@@ -18,15 +18,17 @@ public class MemberListTest {
         Member member2 = new Premium(new Profile("Danny","Phantom", new Date(2003, 9, 12 )), new Date(2024 , 12, 29), Location.EDISON);
         Member member3 = new Family(new Profile("John", "Doe", new Date(1987, 4, 13)),  new Date(2024 , 5, 7), Location.BRIDGEWATER);
 
-        assertTrue(memberList.add(member1)); // Add member1
-        assertTrue(memberList.add(member2)); // Add member2
+        //True Test Cases
+        assertTrue(memberList.add(member1));
+        assertTrue(memberList.add(member2));
         assertTrue(memberList.add(member3));
+
         assertEquals(15, memberList.getSize()); // Check if size is 15
 
         Member x = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5 , 32)), new Date(2025, 8, 25), Location.SOMERVILLE); // Incorrect born date.
         Member y = new Premium(new Profile("Danny","Phantom", new Date(2003, 9, 12 )), new Date(2004 , 12, 29), Location.EDISON); //Membership date is expired
         Member z = new Family(new Profile("John", "Doe", new Date(1987, 4, 13)),  new Date(2024 , 5, 7), Location.BRIDGEWATER);//incorrect born date.
-
+        //False Test Cases
         assertFalse(memberList.add(x));
         assertFalse(memberList.add(y));
         assertFalse(memberList.add(z));
