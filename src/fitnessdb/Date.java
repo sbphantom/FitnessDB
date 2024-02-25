@@ -129,6 +129,17 @@ public class Date implements Comparable<Date> {
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         return compareTo(new Date(year, month, dayOfMonth)) <= 0; //true if date is expired, false if not.
     }
+
+    public int getDay(){
+        return this.day;
+    }
+
+    public int getMonth(){
+        return this.month;
+    }
+    public int getYear(){
+        return this.year;
+    }
     /**
      * A main method for testing the Date class.
      *
