@@ -90,6 +90,16 @@ public class Schedule {
         this.classes = classes;
     }
 
+    public String listString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("-Fitness classes-\n");
+        FitnessClass[] classes = getClasses();
+        for (int i = 0; i < getNumClasses(); i++) {
+            sb.append(classes[i].attendanceList());
+        }
+        sb.append("-end of class list.\n");
+        return sb.toString();
+    }
 
     @Override
     public String toString(){
