@@ -32,6 +32,19 @@ public class Schedule {
     public Schedule(){
     }
 
+    public FitnessClass findClass(FitnessClass target){
+        for (int i = 0; i < numClasses; i++){
+            if (classes[i].equals(target)){
+                return classes[i];
+            }
+        }
+        return null;
+    }
+
+    public int getNumClasses() {
+        return numClasses;
+    }
+
     public void load(File file) throws IOException {
         try (Scanner scanner = new Scanner(file)) {
             int index = 0;
