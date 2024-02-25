@@ -7,6 +7,9 @@ public class Member implements Comparable<Member> {
     private Date expire;
     private Location homeStudio;
 
+    private FitnessClass[] attendance = new FitnessClass[Time.values().length];
+
+
     public Member(Profile profile){
         this.profile = profile;
     }
@@ -21,6 +24,24 @@ public class Member implements Comparable<Member> {
     public double bill() {
         return 0.0; 
      } //return the next due amount
+
+    public boolean canGuest(){
+        return false;
+    }
+
+    public FitnessClass[] getAttendance() {
+        return attendance;
+    }
+
+    public int attendanceCount() {
+        int count = 0;
+        for (FitnessClass c : attendance){
+            if (c != null){
+                count++;
+            }
+        }
+        return count;
+    }
 
     @Override
     public int compareTo(Member member) {
