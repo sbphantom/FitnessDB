@@ -108,6 +108,7 @@ public class MemberList {
 
     public void load(File file) throws IOException {
         Scanner scanner = null;
+        boolean complete = false;
         try {
             scanner = new Scanner(file);
             int index = 0;

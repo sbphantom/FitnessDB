@@ -71,10 +71,12 @@ public class Member implements Comparable<Member> {
     public static void main(String[] args) {
 
         Member basicMember = new Basic(new Profile("Kate", "Lindsey", new Date(1989, 12, 1 )), new Date ( 2024, 5, 31), Location.FRANKLIN);
+        Member basicMember2 = new Basic(new Profile("William", "Black", new Date(2003, 6, 2 )), new Date ( 2024, 5, 31), Location.PISCATAWAY);
+
         Member familyMember = new Family(new Profile("Carl", "Brown", new Date(1991, 10, 7 )), new Date ( 2024, 3, 31), Location.PISCATAWAY);
         Member premuimMember = new Premium(new Profile("Saul", "Goodman", new Date(1999, 5, 1)), new Date ( 2024, 1, 25), Location.BRIDGEWATER);
 
-        System.out.println(basicMember.equals(familyMember); //False
+        System.out.println(basicMember.equals(basicMember2)); //False
 
     }
 }

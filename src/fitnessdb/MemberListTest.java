@@ -1,8 +1,7 @@
 package fitnessdb;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +11,11 @@ public class MemberListTest {
     @Test
     public void testAdd() {
         MemberList memberList = new MemberList();
-        memberList.load(new File("src//fitnessdb//memberList.txt"));
+        try {
+            memberList.load(new File("src//fitnessdb//memberList.txt"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Member member1 = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5 , 8)), new Date(2025, 8, 25), Location.SOMERVILLE);
         Member member2 = new Premium(new Profile("Danny","Phantom", new Date(2003, 9, 12 )), new Date(2024 , 12, 29), Location.EDISON);
