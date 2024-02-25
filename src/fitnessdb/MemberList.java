@@ -39,6 +39,14 @@ public class MemberList {
 
     public boolean contains(Member member) { return find(member) != NOT_FOUND; }
 
+    public Member getMember(Member member){
+        if (contains(member))
+            return members[find(member)];
+        else
+            return null;
+    }
+
+
     public boolean add(Member member) {
         if (size == 0){
             members[0] = member;
@@ -179,12 +187,12 @@ public class MemberList {
     public void printByCounty() {
         sort("county");
         StringBuilder sb = new StringBuilder();
-        sb.append("\"-list of members sorted by county/zipcode-\n");
+        sb.append("\n-list of members sorted by county/zipcode-\n");
 
         for (int i = 0; i < size; i++) {
             sb.append(members[i]).append("\n");
         }
-        sb.append("* end of list *");
+        sb.append("-end of list-");
         System.out.println(sb);
     }
 
@@ -192,12 +200,12 @@ public class MemberList {
     public void printByMember() {
         sort("member");
         StringBuilder sb = new StringBuilder();
-        sb.append("-list of members sorted by member profiles-\n");
+        sb.append("\n-list of members sorted by member profiles-\n");
 
         for (int i = 0; i < size; i++) {
             sb.append(members[i]).append("\n");
         }
-        sb.append("* end of list *");
+        sb.append("-end of list-");
         System.out.println(sb);
     }
     public void printByFees() {} //print the array as is with the next due amounts
