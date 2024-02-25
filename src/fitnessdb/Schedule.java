@@ -66,7 +66,7 @@ public class Schedule {
         Location country = Location.valueOf(parts[3].toUpperCase());
 
         // Create and return a new FitnessClass object
-        return new FitnessClass(offer, instructorName, country, classTime, null, null);
+        return new FitnessClass(offer, instructorName, country, classTime);
     }
 
     public FitnessClass[] getClasses() {
