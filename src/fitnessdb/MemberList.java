@@ -2,7 +2,6 @@ package fitnessdb;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.runtime.SwitchBootstraps;
 import java.util.Scanner;
 
 /**
@@ -11,13 +10,17 @@ import java.util.Scanner;
  * @author Adeola Asimolowo, Danny Onurah
  */
 public class MemberList {
-    private Member [] members; //holds Basic, Family, or Premium objects
+    private Member [] members = new Member[PARTITION_SIZE]; //holds Basic, Family, or Premium objects
     private int size; //number of objects in the array
     public static final int NOT_FOUND = -1;
     public static final int PARTITION_SIZE = 4;
 
+    public Member[] getMembers() {
+        return members;
+    }
+
     private int find(Member member) {
-        for(int i = 0; i < members.length; i++){
+        for(int i = 0; i < size; i++){
             if(members[i].equals(member)){
                 return i;
             }
@@ -27,7 +30,9 @@ public class MemberList {
 
     private void grow() {
         Member[] newArray = new Member[size + PARTITION_SIZE];
-        if (size >= 0) System.arraycopy(members, 0, newArray, 0, size);
+        for (int i = 0; i < size; i++) {
+            newArray[i] = members[i];
+        }
         members = newArray;
 
     }
@@ -35,7 +40,12 @@ public class MemberList {
     public boolean contains(Member member) { return find(member) != NOT_FOUND; }
 
     public boolean add(Member member) {
-        if (contains(member)) return false;
+        if (size == 0){
+            members[0] = member;
+            size++;
+            return true;
+        }
+        else if (contains(member)) return false;
         else {
             if (size % PARTITION_SIZE == 0) grow();
             members[size] = member;
@@ -107,24 +117,31 @@ public class MemberList {
 
 
     public void load(File file) throws IOException {
-        Scanner scanner = null;
-        boolean complete = false;
-        try {
-            scanner = new Scanner(file);
+        try (Scanner scanner = new Scanner(file)) {
             int index = 0;
-            while (scanner.hasNextLine() ) {
+            while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if(line.trim().isEmpty()){ break; }
-                this.members[index] = parseMember(line);
-                this.size++;
-                index++;
-            }
-        } finally {
-            if (scanner != null) {
-                scanner.close();
+
+                if (line.isEmpty() || line.split(" ").length != 6) {
+                    //throw exception?
+                    continue;
+                }
+                String[] args = line.split(" ");
+                String type = args[0];
+                String fname = args[1];
+                String lname = args[2];
+                Date dob = new Date(args[3]);
+                Date expiration = new Date(args[4]);
+                Location location= Location.getLocation(args[5]);
+                Profile profile = new Profile(fname, lname, dob);
+                switch(type) {
+                    case "B" -> add(new Basic(profile, expiration, location));
+                    case "F" -> add(new Family(profile, expiration, location));
+                    case "P" -> add(new Premium(profile, expiration, location));
+                }
             }
         }
-    }//from the text file
+    }
 
     public int getSize(){return  this.size;}
 

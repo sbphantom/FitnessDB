@@ -10,28 +10,47 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Schedule {
-    private FitnessClass [] classes;
+    private FitnessClass [] classes = new FitnessClass[PARTITION_SIZE];
     private int numClasses;
+    public static final int PARTITION_SIZE = 4;
 
-    public Schedule(FitnessClass[] classes, int numClasses){
-        this.classes = classes; 
-        this.numClasses = numClasses; 
+    private void grow() {
+        FitnessClass[] newArray = new FitnessClass[numClasses + PARTITION_SIZE];
+        for (int i = 0; i < numClasses; i++) {
+            newArray[i] = classes[i];
+        }
+        classes = newArray;
     }
+    public boolean add(FitnessClass fitnessClass) {
+        if (numClasses % PARTITION_SIZE == 0) grow();
+        classes[numClasses] = fitnessClass;
+        numClasses++;
+        return true;
+
+    }
+
+    public Schedule(){
+    }
+
     public void load(File file) throws IOException {
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(file);
+        try (Scanner scanner = new Scanner(file)) {
             int index = 0;
-            while (scanner.hasNextLine() ) {
+            while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if(line.trim().isEmpty()){ break; }
-                this.classes[index] = parseFitnessClass(line);
-                this.numClasses++;
-                index++;
-            }
-        } finally {
-            if (scanner != null) {
-                scanner.close();
+
+                if (line.isEmpty() || line.split(" ").length != 4) {
+                    //throw exception?
+                    continue;
+                }
+                String[] args = line.split(" ");
+
+                Offer classInfo = Offer.getOffer(args[0]);
+                Instructor instructor = Instructor.getInstructor(args[1]);
+                Time time = Time.getTime(args[2]);
+                Location studio = Location.getLocation(args[3]);
+                FitnessClass fitnessClass = new FitnessClass(classInfo, instructor, studio, time);
+                add(fitnessClass);
+
             }
         }
     }
@@ -47,7 +66,7 @@ public class Schedule {
         Location country = Location.valueOf(parts[3].toUpperCase());
 
         // Create and return a new FitnessClass object
-        return new FitnessClass(offer, instructorName, country, classTime, null, null);
+        return new FitnessClass(offer, instructorName, country, classTime);
     }
 
     public FitnessClass[] getClasses() {
