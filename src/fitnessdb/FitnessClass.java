@@ -8,8 +8,8 @@ public class FitnessClass {
     private Instructor instructor;
     private Location studio;
     private Time time;
-    private MemberList members;
-    private MemberList guests;
+    private MemberList members = new MemberList();
+    private MemberList guests = new MemberList();
 
     public FitnessClass(Offer classInfo, Instructor instructor, Location studio, Time time, MemberList members, MemberList guests) {
         this.classInfo = classInfo;
@@ -28,6 +28,12 @@ public class FitnessClass {
 
     }
 
+    public FitnessClass(Offer classInfo, Instructor instructor, Location studio) {
+        this.classInfo = classInfo;
+        this.instructor = instructor;
+        this.studio = studio;
+
+    }
 
     public Offer getOffer() {
         return classInfo;
@@ -61,15 +67,20 @@ public class FitnessClass {
         this.time = time;
     }
 
-    public void addMember(Member member){
+    public void addMember(Member member) {
         members.add(member);
     }
 
-    public void addGuest(Member guest){
+    public void addGuest(Member guest) {
         guests.add(guest);
     }
-    public MemberList getMembers(){
+
+    public MemberList getMembers() {
         return members;
+    }
+
+    public boolean removeMember(Member member){
+        return members.remove(member);
     }
 
     public void setMembers(MemberList members) {
@@ -83,23 +94,47 @@ public class FitnessClass {
     public void setGuests(MemberList guests) {
         this.guests = guests;
     }
-    
+
     @Override
-    public String toString(){
-        return String.format("%s - %s, %d:%02d, %s", classInfo, instructor, time.getHour(),time.getMinute(), studio.name());
+    public String toString() {
+        return String.format("%s, %d:%02d, %s", instructor, time.getHour(), time.getMinute(), studio.name());
     }
 
-public static void main(String[] args) {
-    Offer offer = Offer.PILATES; 
-    Instructor instructor = Instructor.EMMA; 
-    Location studio = Location.PISCATAWAY; 
-    Time time = Time.MORNING;
-    Member member1 = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5 , 8)), new Date(2025, 8, 25), Location.SOMERVILLE);
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FitnessClass c) {
+            return this.studio.equals(c.studio) && this.instructor.equals(c.instructor) && this.classInfo.equals(c.classInfo);
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Offer offer = Offer.PILATES;
+        Instructor instructor = Instructor.EMMA;
+        Location studio = Location.PISCATAWAY;
+        Time time = Time.MORNING;
+        Member member1 = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5, 8)), new Date(2025, 8, 25), Location.SOMERVILLE);
 
 
-    FitnessClass classOne = new FitnessClass(offer, instructor, studio, time);
-    classOne.addMember(member1);
-    System.out.println(classOne.getMembers());
-}
+        FitnessClass classOne = new FitnessClass(offer, instructor, studio, time);
+        classOne.addMember(member1);
+        System.out.println(classOne.getMembers());
+    }
 
+    public boolean hasAttendance() {
+        return members.getSize() > 0;
+    }
+
+    public String attendanceList() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s - %s\n", classInfo, toString()));
+        if (hasAttendance())
+            sb.append("[Attendees]\n");{
+            for (int i = 0; i < members.getSize(); i++) {
+                sb.append("   "+ members.getMembers()[i] +"\n");
+            }
+        }
+
+        return sb.toString();
+    }
 }
