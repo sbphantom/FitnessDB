@@ -7,21 +7,30 @@ import java.util.Scanner;
 /**
  * This is an array-based implementation of a linear data structure to hold a list of member
  * objects.
+ *
  * @author Adeola Asimolowo, Danny Onurah
  */
 public class MemberList {
-    private Member [] members = new Member[PARTITION_SIZE]; //holds Basic, Family, or Premium objects
+    private Member[] members = new Member[PARTITION_SIZE]; //holds Basic, Family, or Premium objects
     private int size; //number of objects in the array
     public static final int NOT_FOUND = -1;
     public static final int PARTITION_SIZE = 4;
+    public boolean GUEST_LIST;
+
+    public MemberList() {
+    }
+
+    public MemberList(Boolean type) {
+        GUEST_LIST = true;
+    }
 
     public Member[] getMembers() {
         return members;
     }
 
     private int find(Member member) {
-        for(int i = 0; i < size; i++){
-            if(members[i].equals(member)){
+        for (int i = 0; i < size; i++) {
+            if (members[i].equals(member)) {
                 return i;
             }
         }
@@ -37,9 +46,11 @@ public class MemberList {
 
     }
 
-    public boolean contains(Member member) { return find(member) != NOT_FOUND; }
+    public boolean contains(Member member) {
+        return find(member) != NOT_FOUND;
+    }
 
-    public Member getMember(Member member){
+    public Member getMember(Member member) {
         if (contains(member))
             return members[find(member)];
         else
@@ -48,12 +59,11 @@ public class MemberList {
 
 
     public boolean add(Member member) {
-        if (size == 0){
+        if (size == 0) {
             members[0] = member;
             size++;
             return true;
-        }
-        else if (contains(member)) return false;
+        } else if (contains(member) && !GUEST_LIST) return false;
         else {
             if (size % PARTITION_SIZE == 0) grow();
             members[size] = member;
@@ -61,6 +71,7 @@ public class MemberList {
             return true;
         }
     }
+
 
     public boolean remove(Member member) {
         if (size == 0 || !contains(member)) return false;
@@ -111,14 +122,13 @@ public class MemberList {
     private double compareMember(Member m1, Member m2, String compareBy) {
         return switch (compareBy) {
             case "county" -> {
-                if (m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty())  == 0) {
-                    yield  m1.getHomeStudio().getZipCode().compareTo(m2.getHomeStudio().getZipCode());
-                } else {
-                    yield m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty());
+                if (m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty()) == 0) {
+                    yield m1.getHomeStudio().getZipCode().compareTo(m2.getHomeStudio().getZipCode());
                 }
+                yield m1.getHomeStudio().getCounty().compareTo(m2.getHomeStudio().getCounty());
+
             }
             case "member" -> m1.getProfile().compareTo(m2.getProfile());
-
             default -> 0.0;
         };
     }
@@ -140,9 +150,9 @@ public class MemberList {
                 String lname = args[2];
                 Date dob = new Date(args[3]);
                 Date expiration = new Date(args[4]);
-                Location location= Location.getLocation(args[5]);
+                Location location = Location.getLocation(args[5]);
                 Profile profile = new Profile(fname, lname, dob);
-                switch(type) {
+                switch (type) {
                     case "B" -> add(new Basic(profile, expiration, location));
                     case "F" -> add(new Family(profile, expiration, location));
                     case "P" -> add(new Premium(profile, expiration, location));
@@ -151,7 +161,9 @@ public class MemberList {
         }
     }
 
-    public int getSize(){return  this.size;}
+    public int getSize() {
+        return this.size;
+    }
 
     private Member parseMember(String line) {
         // Implement parsing logic here based on your file format
@@ -174,6 +186,7 @@ public class MemberList {
         };
 
     }
+
     private Date dateBuilder(String[] dateEntry) {
         int[] result = new int[dateEntry.length];
         for (int i = 0; i < dateEntry.length; i++) {
@@ -187,7 +200,7 @@ public class MemberList {
     public void printByCounty() {
         sort("county");
         StringBuilder sb = new StringBuilder();
-        sb.append("\n-list of members sorted by county/zipcode-\n");
+        sb.append("\n-list of members sorted by county then zipcode-\n");
 
         for (int i = 0; i < size; i++) {
             sb.append(members[i]).append("\n");
@@ -208,5 +221,15 @@ public class MemberList {
         sb.append("-end of list-");
         System.out.println(sb);
     }
-    public void printByFees() {} //print the array as is with the next due amounts
+
+    public void printByFees() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n-list of members with next dues-\n");
+
+        for (int i = 0; i < size; i++) {
+            sb.append(members[i]).append(String.format(" [next due: $%.02f]\n", members[i].bill()));
+        }
+        sb.append("-end of list-");
+        System.out.println(sb);
+    } //print the array as is with the next due amounts
 }
