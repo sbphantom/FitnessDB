@@ -5,7 +5,11 @@ package fitnessdb;
  */
 public class Premium extends Member {
     private int guestPass;
-    private final double PREMIUMPRICE = 59.99;
+    private final double PREMIUM_PRICE = 59.99;
+    private final int billingCycleLength = 12;
+
+    private final int complemntaryMonth = 1;
+
 
     public Premium(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
@@ -20,12 +24,27 @@ public class Premium extends Member {
 
     @Override
     public double bill() {
-        return PREMIUMPRICE;
+        return PREMIUM_PRICE * (billingCycleLength - complemntaryMonth);
     }
 
     @Override
     public boolean canGuest() {
-        return (guestPass > 0);
+        return (!isExpired() && guestPass > 0);
+    }
+
+    @Override
+    public boolean useGuestPass() {
+        if (canGuest()) {
+            guestPass--;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addGuestPass() {
+        guestPass++;
+        return true;
     }
 
     public int getGuessPass() {

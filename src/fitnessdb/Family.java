@@ -8,7 +8,9 @@ import java.util.Calendar;
 public class Family extends Member {
 
     private boolean guest;
-    private final double FAMILYPRICE = 49.99;
+    private final double FAMILY_PRICE = 49.99;
+
+    private final int billingCycleLength = 3;
 
     public Family(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
@@ -19,13 +21,27 @@ public class Family extends Member {
 
     @Override
     public double bill() {
-        return FAMILYPRICE;
+        double bill = FAMILY_PRICE * billingCycleLength;
+        return bill;
     }
 
 
     @Override
     public boolean canGuest() {
         return !isExpired() && guest;
+    }
+    @Override
+    public boolean useGuestPass() {
+        if (canGuest()){
+            guest = false;
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public boolean addGuestPass() {
+        guest = true;
+        return true;
     }
 
     public boolean getGuest() {
@@ -42,7 +58,6 @@ public class Family extends Member {
             return String.format("%s, Membership expired %s, Home Studio: %s, (Family) guest-pass remaining: not eligible", getProfile(), getExpire(), getHomeStudio());
         } else if (guest) {
             return String.format("%s, Membership expires %s, Home Studio: %s, (Family) guest-pass remaining: 1", getProfile(), getExpire(), getHomeStudio());
-
         } else {
             return String.format("%s, Membership expires %s, Home Studio: %s, (Family) guest-pass remaining: 0", getProfile(), getExpire(), getHomeStudio());
         }
