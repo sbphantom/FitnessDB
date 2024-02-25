@@ -9,7 +9,9 @@ public class FitnessClass {
     private Location studio;
     private Time time;
     private MemberList members = new MemberList();
-    private MemberList guests = new MemberList();
+    public boolean GUEST_LIST = true;
+    private MemberList guests = new MemberList(GUEST_LIST);
+
 
     public FitnessClass(Offer classInfo, Instructor instructor, Location studio, Time time, MemberList members, MemberList guests) {
         this.classInfo = classInfo;
@@ -83,6 +85,12 @@ public class FitnessClass {
         return members.remove(member);
     }
 
+    public boolean removeGuest(Member member){
+        member.addGuestPass();
+        return guests.remove(member);
+    }
+
+
     public void setMembers(MemberList members) {
         this.members = members;
     }
@@ -124,6 +132,9 @@ public class FitnessClass {
     public boolean hasAttendance() {
         return members.getSize() > 0;
     }
+    public boolean hasGuestAttendance() {
+        return guests.getSize() > 0;
+    }
 
     public String attendanceList() {
         StringBuilder sb = new StringBuilder();
@@ -134,7 +145,16 @@ public class FitnessClass {
                 sb.append("   "+ members.getMembers()[i] +"\n");
             }
         }
-
+        if (hasGuestAttendance()) {
+            sb.append("[Guests]\n");{
+                Member prev = null;
+                for (int i = 0; i < guests.getSize(); i++) {
+                    if (!guests.getMembers()[i].equals(prev))
+                        sb.append("   " + guests.getMembers()[i] + "\n");
+                    prev = guests.getMembers()[i];
+                }
+            }
+        }
         return sb.toString();
     }
 }
