@@ -8,6 +8,7 @@ public class Member implements Comparable<Member> {
     private Location homeStudio;
 
     private FitnessClass[] attendance = new FitnessClass[Time.values().length];
+    private FitnessClass[] guestAttendance = new FitnessClass[Time.values().length];
 
 
     public Member(Profile profile){
@@ -22,15 +23,26 @@ public class Member implements Comparable<Member> {
 
 
     public double bill() {
-        return 0.0; 
+        return 0.0;
      } //return the next due amount
 
     public boolean canGuest(){
         return false;
     }
 
+    public boolean useGuestPass(){
+        return false;
+    }
+    public boolean addGuestPass(){
+        return false;
+    }
+
     public FitnessClass[] getAttendance() {
         return attendance;
+    }
+
+    public FitnessClass[] getGuestAttendance() {
+        return guestAttendance;
     }
 
     public int attendanceCount() {
