@@ -27,7 +27,7 @@ public class Basic extends Member{
 
     @Override
     public String toString() {
-        return String.format("%s, Membership expires %s, Home Studio: %s, (Basic) number of classes attended: %d", this.getProfile(), this.getExpire(), this.getHomeStudio(), this.getNumClasses());
+        return String.format("%s, Membership expires %s, Home Studio: %s, (Basic) number of classes attended: %d", this.getProfile(), this.getExpire(), this.getHomeStudio(), this.attendanceCount());
     }
 
 }

@@ -14,22 +14,13 @@ public class StudioManager {
 
 
     /* Command list
-   AB - Add basic member (AB April March 3/31/1990 Piscataway)
-   AF - Add family member
-   AP - Add premium member
-   C - Cancel/remove member (C Paul Siegel 5/1/1999)
-   S - Display class schedule with current attendees
-   PM - Print members sorted by member profiles (last name -> first name -> dob)
    PC = Print members sorted by county names, then zip code
    PF - Print members with membership fees
-   R - Record attendance (R cardio Jennifer somerville Roy Brooks 12/8/1977)
-   U - remove a member from a class (U Pilates Mary Lindsey 12/1/1989)
    RG - Record guest attendance (RG cardio Davis bridgewater Jonnathan Wei 9/21/1992)
    UG - Remove guest attendance (UG pilates davis Edison Jerry Brown 6/30/1979)
-   Q - Stop program
     */
     //AB John Doe 1/20/2003 BRIDGEWATER
-    private String commandAB(String[] response) {
+    private String commandAdd(String[] response) {
         String fname = response[1];
         String lname = response[2];
         Date dob;
@@ -37,7 +28,8 @@ public class StudioManager {
             dob = new Date(response[3]);
         } catch (NumberFormatException e) {
             return "The date contains characters.";
-        }        Location location = Location.getLocation(response[4]);
+        }
+        Location location = Location.getLocation(response[4]);
         Profile profile = new Profile(fname, lname, dob);
 
         if (!dob.isValid()) {
@@ -51,73 +43,13 @@ public class StudioManager {
             return String.format("%s: invalid studio location!", response[4]);
         }
 
-        Basic member = new Basic(profile, Date.todayDate().addMonths(1), location);
-
-        if (memberlist.add(member)) {
+        if (response[0].equals("AB") && memberlist.add(new Basic(profile, Date.todayDate().addMonths(1), location)))
             return String.format("%s %s added.", fname, lname);
-        } else
-            return String.format("%s %s is already in the member database.", fname, lname);
-    }
-
-    //AF Jerry Brown 6/30/2007 Edison
-    private String commandAF(String[] response) {
-        String fname = response[1];
-        String lname = response[2];
-        Date dob;
-        try {
-            dob = new Date(response[3]);
-        } catch (NumberFormatException e) {
-            return "The date contains characters.";
-        }        Location location = Location.getLocation(response[4]);
-        Profile profile = new Profile(fname, lname, dob);
-
-        if (!dob.isValid()) {
-            return String.format("DOB %s: invalid calendar date!", dob);
-        } else if (dob.compareTo(Date.todayDate()) >= 0) {
-            return String.format("DOB %s: cannot be today or a future date!", dob);
-        } else if (profile.isMinor()) {
-            return String.format("DOB %s: must be 18 or older to join!", dob);
-        }
-        if (location == null) {
-            return String.format("%s invalid studio location!", response[4]);
-        }
-
-        Family member = new Family(profile, Date.todayDate().addMonths(3), location);
-
-        if (memberlist.add(member)) {
+        else if (response[0].equals("AF") && memberlist.add(new Family(profile, Date.todayDate().addMonths(3), location)))
             return String.format("%s %s added.", fname, lname);
-        } else
-            return String.format("%s %s is already in the member database.", fname, lname);
-    }
-
-    //AP Jonnathan Wei 9/21/2006 bridgewater
-    private String commandAP(String[] response) {
-        String fname = response[1];
-        String lname = response[2];
-        Date dob;
-        try {
-            dob = new Date(response[3]);
-        } catch (NumberFormatException e) {
-            return "The date contains characters.";
-        }        Location location = Location.getLocation(response[4]);
-        Profile profile = new Profile(fname, lname, dob);
-
-        if (!dob.isValid()) {
-            return String.format("DOB %s: invalid calendar date!", dob);
-        } else if (dob.compareTo(Date.todayDate()) >= 0) {
-            return String.format("DOB %s: cannot be today or a future date!", dob);
-        } else if (profile.isMinor()) {
-            return String.format("DOB %s: must be 18 or older to join!", dob);
-        }
-        if (location == null) {
-            return String.format("%s invalid studio location!", response[4]);
-        }
-
-        Premium member = new Premium(profile, Date.todayDate().addYears(1), location);
-
-        if (memberlist.add(member)) {
+        else if (response[0].equals("AP") && memberlist.add(new Premium(profile, Date.todayDate().addYears(1), location)))
             return String.format("%s %s added.", fname, lname);
-        } else
+        else
             return String.format("%s %s is already in the member database.", fname, lname);
     }
 
@@ -144,7 +76,14 @@ public class StudioManager {
 
     //S
     private String commandS() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("-Fitness classes-\n");
+        FitnessClass[] classes = schedule.getClasses();
+        for (int i = 0; i < schedule.getNumClasses(); i++) {
+            sb.append(classes[i].attendanceList());
+        }
+        sb.append("-end of class list.\n");
+        return sb.toString();
     }
 
     //PM
@@ -163,18 +102,132 @@ public class StudioManager {
     }
 
     //R cardio Jennifer somerville Roy Brooks 8/8/1977
-    private String commandR(String input) {
-        return null;
+    private String commandR(String[] request) {
+        Offer offer = Offer.getOffer(request[1]);
+        Instructor instructor = Instructor.getInstructor(request[2]);
+        Location location = Location.getLocation(request[3]);
+
+        if (offer == null) {
+            return String.format("%s - class name does not exist.", request[1]);
+        }
+        if (instructor == null) {
+            return String.format("%s - instructor does not exist.", request[2]);
+        }
+        if (location == null) {
+            return String.format("%s - invalid studio location.", request[3]);
+        }
+        FitnessClass target = schedule.findClass(new FitnessClass(offer, instructor, location));
+        if (target == null) {
+            return String.format("%s by %s does not exist at %s", request[1], request[2], request[3]);
+        }
+
+        String fname = request[4];
+        String lname = request[5];
+        Date dob = new Date(request[6]);
+
+        Profile profile = new Profile(fname, lname, dob);
+        Member member = memberlist.getMember(new Member(profile));
+        if (member == null) {
+            return String.format("%s %s %s is not in the member database.", fname, lname, dob);
+        } else if (member.isExpired()) {
+            return (String.format("%s %s %s membership expired.", fname, lname, dob));
+        }
+        if (member instanceof Basic && !location.equals(member.getHomeStudio())) {
+            return (String.format("%s %s is attending a class at %s - [BASIC] home studio at %s", fname, lname, location.name(), member.getHomeStudio().name()));
+        }
+
+        FitnessClass[] memberAttendance = member.getAttendance();
+        if (memberAttendance[target.getTime().ordinal()] == null) {
+            memberAttendance[target.getTime().ordinal()] = (target);
+            target.addMember(member);
+            return String.format("%s %s attendance recorded %s at %s", fname, lname, offer, location);
+        } else if (!memberAttendance[target.getTime().ordinal()].equals(target)) {
+            FitnessClass currentLocation = memberAttendance[target.getTime().ordinal()];
+            return String.format("Time conflict - %s %s is in another class held at %s - %s", fname, lname, target.getTime(), target);
+        } else {
+            return String.format("%s %s is already in the class.", fname, lname);
+        }
+
     }
 
     //U Pilates KIM FRANKLIN Mary Lindsey 12/1/1989
-    private String commandU(String input) {
-        return null;
+    private String commandU(String[] request) {
+        Offer offer = Offer.getOffer(request[1]);
+        Instructor instructor = Instructor.getInstructor(request[2]);
+        Location location = Location.getLocation(request[3]);
+
+        FitnessClass target = schedule.findClass(new FitnessClass(offer, instructor, location));
+
+        String fname = request[4];
+        String lname = request[5];
+        Date dob = new Date(request[6]);
+
+        Profile profile = new Profile(fname, lname, dob);
+        Member member = memberlist.getMember(new Member(profile));
+
+        FitnessClass[] memberAttendance = member.getAttendance();
+//        System.out.print(memberAttendance[0] + " : " + memberAttendance[1] + " : " + memberAttendance[2] + "\n");
+
+        if (memberAttendance[target.getTime().ordinal()] == null) {
+            return String.format("%s %s is not in %s, %s, %s", fname, lname, target, target.getStudio().getZipCode(), target.getStudio().getCounty());
+        } else {
+            memberAttendance[target.getTime().ordinal()] = null;
+            target.removeMember(member);
+            return String.format("%s %s is removed from %s, %s, %s", fname, lname, target, target.getStudio().getZipCode(), target.getStudio().getCounty());
+        }
     }
 
     //RG Pilates Jennifer Bridgewater Mary Lindsey 12/1/1989
-    private String commandRG(String input) {
-        return null;
+    private String commandRG(String[] request) {
+        Offer offer = Offer.getOffer(request[1]);
+        Instructor instructor = Instructor.getInstructor(request[2]);
+        Location location = Location.getLocation(request[3]);
+
+        if (offer == null) {
+            return String.format("%s - class name does not exist.", request[1]);
+        }
+        if (instructor == null) {
+            return String.format("%s - instructor does not exist.", request[2]);
+        }
+        if (location == null) {
+            return String.format("%s - invalid studio location.", request[3]);
+        }
+        FitnessClass target = schedule.findClass(new FitnessClass(offer, instructor, location));
+        if (target == null) {
+            return String.format("%s by %s does not exist at %s", request[1], request[2], request[3]);
+        }
+
+        String fname = request[4];
+        String lname = request[5];
+        Date dob = new Date(request[6]);
+
+        Profile profile = new Profile(fname, lname, dob);
+        Member member = memberlist.getMember(new Member(profile));
+        if (member == null) {
+            return String.format("%s %s %s is not in the member database.", fname, lname, dob);
+        } else if (member.isExpired()) {
+            return (String.format("%s %s %s membership expired.", fname, lname, dob));
+        } else if (member instanceof Basic) {
+            return (String.format("%s %s [BASIC] - no guest pass.", member.getProfile().getFname(), member.getProfile().getLname()));
+        } else if (!member.canGuest()) {
+            return (String.format("%s %s guest pass not available.", member.getProfile().getFname(), member.getProfile().getLname()));
+        }
+
+        if (member instanceof Basic && !location.equals(member.getHomeStudio())) {
+            return (String.format("%s %s is attending a class at %s - [BASIC] home studio at %s", fname, lname, location.name(), member.getHomeStudio().name()));
+        }
+
+        FitnessClass[] memberAttendance = member.getAttendance();
+        if (memberAttendance[target.getTime().ordinal()] == null) {
+            memberAttendance[target.getTime().ordinal()] = (target);
+            target.addMember(member);
+            return String.format("%s %s attendance recorded %s at %s", fname, lname, offer, location);
+        } else if (!memberAttendance[target.getTime().ordinal()].equals(target)) {
+            FitnessClass currentLocation = memberAttendance[target.getTime().ordinal()];
+            return String.format("Time conflict - %s %s is in another class held at %s - %s", fname, lname, target.getTime(), target);
+        } else {
+            return String.format("%s %s is already in the class.", fname, lname);
+        }
     }
 
     //UG pilates davis Edison Jerry Brown 6/30/1979
@@ -186,19 +239,9 @@ public class StudioManager {
         String[] request = inputString.split(" ");
         String command = request[0];
         return switch (command) {
-            case "AB" -> {
+            case "AB", "AF", "AP" -> {
                 if (request.length == 5) {
-                    yield commandAB(request);
-                } else yield "Missing data tokens.";
-            }
-            case "AF" -> {
-                if (request.length == 5) {
-                    yield commandAF(request);
-                } else yield "Missing data tokens.";
-            }
-            case "AP" -> {
-                if (request.length == 5) {
-                    yield commandAP(request);
+                    yield commandAdd(request);
                 } else yield "Missing data tokens.";
             }
             case "C" -> {
@@ -207,21 +250,24 @@ public class StudioManager {
                 } else yield "Missing data tokens.";
             }
             case "S" -> commandS();
-            case "PM" -> commandPM();
+            case "PM" -> {
+                memberlist.printByMember();
+                yield "";
+            }
             case "PC" -> commandPC();
             case "PF" -> commandPF();
-            case "R" -> commandR(inputString);
-            case "U" -> commandU(inputString);
+            case "R" -> {
+                if (request.length == 7) {
+                    yield commandR(request);
+                } else yield "Missing data tokens.";
+            }
+            case "U" -> {
+                if (request.length == 7) {
+                    yield commandU(request);
+                } else yield "Missing data tokens.";
+            }
             case "RG" -> commandRG(inputString);
             case "UG" -> commandUG(inputString);
-//            case "PD" -> {
-//                if (mainCollection.isEmpty()) yield "Collection is empty!";
-//                else {
-//                    mainCollection.printByDate();
-//                    yield printCollection("PD", mainCollection);
-//                }
-//            }
-
             default -> String.format("%s is an invalid command!", command);
         };
     }
@@ -232,7 +278,7 @@ public class StudioManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            System.out.println("-list of members loaded-");
+            System.out.println("\n-list of members loaded-");
             for (Member m : memberlist.getMembers()) {
                 if (m != null) System.out.println(m);
             }

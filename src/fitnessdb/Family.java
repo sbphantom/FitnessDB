@@ -22,6 +22,12 @@ public class Family extends Member {
         return FAMILYPRICE;
     }
 
+
+    @Override
+    public boolean canGuest() {
+        return !isExpired() && guest;
+    }
+
     public boolean getGuest() {
         return this.guest;
     }
