@@ -25,23 +25,21 @@ public class FitnessClass {
     public void addGuest(Member guest){
         guests.add(guest);
     }
+    public MemberList getMembers(){
+        return members;
+    }
 
-    
 public static void main(String[] args) {
     Offer offer = Offer.PILATES; 
     Instructor instructor = Instructor.EMMA; 
     Location studio = Location.PISCATAWAY; 
-    Time time = Time.MORNING; 
-    MemberList m1 = new MemberList(); 
-    try {
-        m1.load(new File("src//fitnessdb//memberList.txt"));
-    } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
-    
-    FitnessClass classOne = new FitnessClass(offer, instructor, studio, time, m1, null); 
+    Time time = Time.MORNING;
+    Member member1 = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5 , 8)), new Date(2025, 8, 25), Location.SOMERVILLE);
 
+    
+    FitnessClass classOne = new FitnessClass(offer, instructor, studio, time);
+    classOne.addMember(member1);
+    System.out.println(classOne.getMembers());
 }
 
 }
