@@ -1,4 +1,4 @@
 package fitnessdb;
 
-public interface StudioManager {
+public class StudioManager {
 }
