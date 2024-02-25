@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class FitnessClass {
+
+
     private Offer classInfo;
     private Instructor instructor;
     private Location studio;
@@ -29,7 +31,27 @@ public class FitnessClass {
         return members;
     }
 
-public static void main(String[] args) {
+    public Offer getOffer() {
+        return classInfo;
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public Location getStudio() {
+        return studio;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public MemberList getGuests() {
+        return guests;
+    }
+
+    public static void main(String[] args) {
     Offer offer = Offer.PILATES; 
     Instructor instructor = Instructor.EMMA; 
     Location studio = Location.PISCATAWAY; 

@@ -7,6 +7,7 @@ public class Premium extends Member {
     private  int guestPass;
     private final double PREMIUMPRICE = 59.99; 
 
+    private double amount;
     public Premium(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
         //TODO Auto-generated constructor stub
@@ -17,7 +18,8 @@ public class Premium extends Member {
 
     @Override
     public double bill() {
-        return PREMIUMPRICE;
+        this.amount+= PREMIUMPRICE;
+        return this.amount;
     }
 
 

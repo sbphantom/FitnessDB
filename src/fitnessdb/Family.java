@@ -9,7 +9,7 @@ public class Family extends Member{
 
     private boolean guest;
     private final double FAMILYPRICE = 49.99; 
-   
+    private double amount;
     public Family(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
         //TODO Auto-generated constructor stub
@@ -19,7 +19,8 @@ public class Family extends Member{
 
     @Override
     public double bill() {
-        return FAMILYPRICE; 
+        this.amount+= FAMILYPRICE;
+        return this.amount;
     }
 
     public boolean getGuest(){

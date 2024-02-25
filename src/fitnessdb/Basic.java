@@ -5,7 +5,7 @@ package fitnessdb;
 public class Basic extends Member{
     private  int numClasses;
     private final double BASICPRICE = 39.99; 
-    
+    private double amount;
     public Basic(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
         //TODO Auto-generated constructor stub
@@ -14,7 +14,8 @@ public class Basic extends Member{
 
     @Override
     public double bill() {       
-        return BASICPRICE;  
+        this.amount +=BASICPRICE;
+        return this.amount;
     }
 
     public int  getNumClasses(){
