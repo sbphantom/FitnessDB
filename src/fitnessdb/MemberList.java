@@ -6,28 +6,55 @@ import java.util.Scanner;
 
 /**
  * This is an array-based implementation of a linear data structure to hold a list of member
- * objects.
  *
- * @author Adeola Asimolowo, Danny Onurah
+ * @author Danny Onuorah, Adeola Asimolowo
  */
 public class MemberList {
-    private Member[] members = new Member[PARTITION_SIZE]; //holds Basic, Family, or Premium objects
-    private int size; //number of objects in the array
+    private Member[] members = new Member[PARTITION_SIZE];
+    private int size;
     public static final int NOT_FOUND = -1;
     public static final int PARTITION_SIZE = 4;
     public boolean GUEST_LIST;
 
+    /**
+     * Default constructor for MemberList.
+     */
     public MemberList() {
     }
 
+    /**
+     * Constructs a MemberList as GuestList.
+     *
+     * @param type a Boolean value indicating guest list.
+     */
     public MemberList(Boolean type) {
-        GUEST_LIST = true;
+        GUEST_LIST = type;
     }
 
+    /**
+     * Returns the members of the MemberList.
+     *
+     * @return an array of Member objects representing the members of the MemberList.
+     */
     public Member[] getMembers() {
         return members;
     }
 
+    /**
+     * Returns the size of the MemberList.
+     *
+     * @return an integer representing the size of the MemberList.
+     */
+    public int getSize() {
+        return this.size;
+    }
+
+    /**
+     * Finds a member in the MemberList.
+     *
+     * @param member the Member object to be found.
+     * @return an integer representing the index of the member in the MemberList. Returns NOT_FOUND if the member is not in the list.
+     */
     private int find(Member member) {
         for (int i = 0; i < size; i++) {
             if (members[i].equals(member)) {
@@ -37,19 +64,33 @@ public class MemberList {
         return NOT_FOUND;
     }
 
+    /**
+     * Grows the size of the MemberList by the partition size.
+     */
     private void grow() {
         Member[] newArray = new Member[size + PARTITION_SIZE];
         for (int i = 0; i < size; i++) {
             newArray[i] = members[i];
         }
         members = newArray;
-
     }
 
+    /**
+     * Checks if a member is in the MemberList.
+     *
+     * @param member the Member object to be checked.
+     * @return true if the member is in the MemberList, false otherwise.
+     */
     public boolean contains(Member member) {
         return find(member) != NOT_FOUND;
     }
 
+    /**
+     * Returns a member from the MemberList.
+     *
+     * @param member the Member object to be returned.
+     * @return the Member object if it is in the MemberList, null otherwise.
+     */
     public Member getMember(Member member) {
         if (contains(member))
             return members[find(member)];
@@ -57,7 +98,12 @@ public class MemberList {
             return null;
     }
 
-
+    /**
+     * Adds a member to the MemberList.
+     *
+     * @param member the Member object to be added.
+     * @return true if the member was successfully added, false otherwise.
+     */
     public boolean add(Member member) {
         if (size == 0) {
             members[0] = member;
@@ -72,7 +118,12 @@ public class MemberList {
         }
     }
 
-
+    /**
+     * Removes a member from the MemberList.
+     *
+     * @param member the Member object to be removed.
+     * @return true if the member was successfully removed, false otherwise.
+     */
     public boolean remove(Member member) {
         if (size == 0 || !contains(member)) return false;
 
@@ -111,13 +162,13 @@ public class MemberList {
 
 
     /**
-     * Compares two albums based on a given param
+     * Compares two member based on a given param
      *
      * @param m1        first member to compare to
      * @param m2        second member to compare against
      * @param compareBy what to compare by
-     *                  options are "county", "member", and "fees"
-     *                  defaults to album title
+     *                  options are "county" and "member
+     *                  invalid option does not sort
      */
     private double compareMember(Member m1, Member m2, String compareBy) {
         return switch (compareBy) {
@@ -133,10 +184,11 @@ public class MemberList {
         };
     }
 
-
+    /**
+     * Loads members from file
+     */
     public void load(File file) throws IOException {
         try (Scanner scanner = new Scanner(file)) {
-            int index = 0;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
 
@@ -161,42 +213,9 @@ public class MemberList {
         }
     }
 
-    public int getSize() {
-        return this.size;
-    }
-
-    private Member parseMember(String line) {
-        // Implement parsing logic here based on your file format
-        // For example, split the line by a delimiter and extract relevant information
-        String[] parts = line.split("\\s+");
-
-        String memberType = parts[0];
-        String fname = parts[1];
-        String lname = parts[2];
-        Date dob = dateBuilder(parts[3].split("/"));
-        Date expire = dateBuilder(parts[4].split("/"));
-        Location homestudio = Location.valueOf(parts[5]);
-
-        Profile profile = new Profile(fname, lname, dob);
-        return switch (memberType) {
-            case "B" -> new Basic(profile, expire, homestudio);
-            case "F" -> new Family(profile, expire, homestudio);
-            case "P" -> new Premium(profile, expire, homestudio);
-            default -> null;
-        };
-
-    }
-
-    private Date dateBuilder(String[] dateEntry) {
-        int[] result = new int[dateEntry.length];
-        for (int i = 0; i < dateEntry.length; i++) {
-            result[i] = Integer.parseInt(dateEntry[i]);
-        }
-        return new Date(result[2], result[0], result[1]);
-    }
-
-
-    //sort by county then zip code
+    /**
+     * Prints the memberlist sorted by location
+     */
     public void printByCounty() {
         sort("county");
         StringBuilder sb = new StringBuilder();
@@ -209,7 +228,9 @@ public class MemberList {
         System.out.println(sb);
     }
 
-    //sort by member profile
+    /**
+     * Prints the memberlist sorted by members
+     */
     public void printByMember() {
         sort("member");
         StringBuilder sb = new StringBuilder();
@@ -222,6 +243,9 @@ public class MemberList {
         System.out.println(sb);
     }
 
+    /**
+     * Prints the memberlist along with their fees
+     */
     public void printByFees() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n-list of members with next dues-\n");
@@ -231,5 +255,5 @@ public class MemberList {
         }
         sb.append("-end of list-");
         System.out.println(sb);
-    } //print the array as is with the next due amounts
+    }
 }
