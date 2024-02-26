@@ -3,7 +3,7 @@ package fitnessdb;
 /**
  * Profile object storing customer information
  *
- * @author Danny
+ * @author Danny Onuorah, Adeola Asimolowo
  */
 public class Profile implements Comparable<Profile> {
     private final String fname;
