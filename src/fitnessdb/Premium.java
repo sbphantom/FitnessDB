@@ -1,37 +1,57 @@
 package fitnessdb;
 
 /**
- * @author Adeola
+ * Subclass of Member for Premium tier customers
+ *
+ * @author Danny Onuorah, Adeola Asimolowo
  */
 public class Premium extends Member {
     private int guestPass;
     private final double PREMIUM_PRICE = 59.99;
     private final int billingCycleLength = 12;
-
     private final int complemntaryMonth = 1;
 
-
+    /**
+     * Constructs a premium tier member.
+     *
+     * @param profile The profile of the customer.
+     * @param expire The expiration date of the customer's plan.
+     * @param homeStudio The signup location of the costumer.
+     */
     public Premium(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
-        //TODO Auto-generated constructor stub
         if (expire.isExpired()) {
             this.guestPass = 0;
         } else {
             this.guestPass = 3;
         }
-
     }
 
+    /**
+     * Returns the amount of money due for the billing cycle.
+     *
+     * @return the amount due
+     */
     @Override
     public double bill() {
         return PREMIUM_PRICE * (billingCycleLength - complemntaryMonth);
     }
 
+    /**
+     * Returns whether the member is able to guess.
+     *
+     * @return true if the member is able to guess.
+     */
     @Override
     public boolean canGuest() {
         return (!isExpired() && guestPass > 0);
     }
 
+    /**
+     * Use of a guest pass of the user.
+     *
+     * @return true if a guest pass was successfully used.
+     */
     @Override
     public boolean useGuestPass() {
         if (canGuest()) {
@@ -41,20 +61,22 @@ public class Premium extends Member {
         return false;
     }
 
+    /**
+     * Adds a guest pass to the user.
+     *
+     * @return true if a guest pass was successfully added.
+     */
     @Override
     public boolean addGuestPass() {
         guestPass++;
         return true;
     }
 
-    public int getGuessPass() {
-        return guestPass;
-    }
-
-    public void setGuestPass(int guestPass) {
-        this.guestPass = guestPass;
-    }
-
+    /**
+     * Returns a string contain member
+     *
+     * @return member string
+     */
     @Override
     public String toString() {
         if (isExpired()) {

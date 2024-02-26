@@ -1,7 +1,10 @@
 package fitnessdb;
 
-import java.io.File;
-import java.io.IOException;
+/**
+ * Class representing a fitness classes
+ *
+ * @author Danny Onuorah , Adeola Asimolowo
+ */
 
 public class FitnessClass {
     private Offer classInfo;
@@ -12,102 +15,144 @@ public class FitnessClass {
     public boolean GUEST_LIST = true;
     private MemberList guests = new MemberList(GUEST_LIST);
 
-
-    public FitnessClass(Offer classInfo, Instructor instructor, Location studio, Time time, MemberList members, MemberList guests) {
-        this.classInfo = classInfo;
-        this.instructor = instructor;
-        this.studio = studio;
-        this.time = time;
-        this.members = members;
-        this.guests = guests;
-    }
+    /**
+     * Creates a fitness class
+     *
+     * @param classInfo  The type of class.
+     * @param instructor The instructor teaching the class.
+     * @param studio     The location of the class.
+     * @param time       the time of the class
+     */
 
     public FitnessClass(Offer classInfo, Instructor instructor, Location studio, Time time) {
         this.classInfo = classInfo;
         this.instructor = instructor;
         this.studio = studio;
         this.time = time;
-
     }
 
+    /**
+     * Creates a temporary fitness class used during searching
+     *
+     * @param classInfo  The type of class.
+     * @param instructor The instructor teaching the class.
+     * @param studio     The location of the class.
+     */
     public FitnessClass(Offer classInfo, Instructor instructor, Location studio) {
         this.classInfo = classInfo;
         this.instructor = instructor;
         this.studio = studio;
-
     }
 
-    public Offer getOffer() {
-        return classInfo;
-    }
-
-    public void setOffer(Offer classInfo) {
-        this.classInfo = classInfo;
-    }
-
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
-
+    /**
+     * Returns the location of the class.
+     *
+     * @return class location
+     */
     public Location getStudio() {
         return studio;
     }
 
-    public void setStudio(Location studio) {
-        this.studio = studio;
-    }
-
+    /**
+     * Returns the time of the class.
+     *
+     * @return class time
+     */
     public Time getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
-        this.time = time;
-    }
-
+    /**
+     * Marks the attendance of a member.
+     */
     public void addMember(Member member) {
         members.add(member);
     }
 
+    /**
+     * Marks the attendance of a guest.
+     */
     public void addGuest(Member guest) {
         guests.add(guest);
     }
 
-    public MemberList getMembers() {
-        return members;
+    /**
+     * Removes a member from attendance.
+     */
+    public void removeMember(Member member) {
+        members.remove(member);
     }
 
-    public boolean removeMember(Member member){
-        return members.remove(member);
-    }
-
-    public boolean removeGuest(Member member){
+    /**
+     * Removes a guest from attendance.
+     */
+    public void removeGuest(Member member) {
         member.addGuestPass();
-        return guests.remove(member);
+        guests.remove(member);
     }
 
-
-    public void setMembers(MemberList members) {
-        this.members = members;
+    /**
+     * Returns whether if members have attended the class
+     *
+     * @return true if members have attended
+     */
+    public boolean hasAttendance() {
+        return members.getSize() > 0;
     }
 
-    public MemberList getGuests() {
-        return guests;
+    /**
+     * Returns whether if guests have attended the class
+     *
+     * @return true if guests have attended
+     */
+    public boolean hasGuestAttendance() {
+        return guests.getSize() > 0;
     }
 
-    public void setGuests(MemberList guests) {
-        this.guests = guests;
+    /**
+     * Returns a string of the class's attendance
+     *
+     * @return formatted string of current class attendance
+     */
+    public String attendanceList() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s - %s\n", classInfo, toString()));
+        if (hasAttendance())
+            sb.append("[Attendees]\n");
+        {
+            for (int i = 0; i < members.getSize(); i++) {
+                sb.append("   " + members.getMembers()[i] + "\n");
+            }
+        }
+        if (hasGuestAttendance()) {
+            sb.append("[Guests]\n");
+            {
+                Member prev = null;
+                for (int i = 0; i < guests.getSize(); i++) {
+                    if (!guests.getMembers()[i].equals(prev))
+                        sb.append("   " + guests.getMembers()[i] + "\n");
+                    prev = guests.getMembers()[i];
+                }
+            }
+        }
+        return sb.toString();
     }
 
+    /**
+     * Returns a string contain the fitness class
+     *
+     * @return class string
+     */
     @Override
     public String toString() {
         return String.format("%s, %d:%02d, %s", instructor, time.getHour(), time.getMinute(), studio.name());
     }
 
+    /**
+     * Returns whether two class are the same
+     *
+     * @return true if offer, studio and instructor are the same
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof FitnessClass c) {
@@ -123,38 +168,7 @@ public class FitnessClass {
         Time time = Time.MORNING;
         Member member1 = new Basic(new Profile("Adeola", "Asimolowo", new Date(2003, 5, 8)), new Date(2025, 8, 25), Location.SOMERVILLE);
 
-
         FitnessClass classOne = new FitnessClass(offer, instructor, studio, time);
         classOne.addMember(member1);
-        System.out.println(classOne.getMembers());
-    }
-
-    public boolean hasAttendance() {
-        return members.getSize() > 0;
-    }
-    public boolean hasGuestAttendance() {
-        return guests.getSize() > 0;
-    }
-
-    public String attendanceList() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s - %s\n", classInfo, toString()));
-        if (hasAttendance())
-            sb.append("[Attendees]\n");{
-            for (int i = 0; i < members.getSize(); i++) {
-                sb.append("   "+ members.getMembers()[i] +"\n");
-            }
-        }
-        if (hasGuestAttendance()) {
-            sb.append("[Guests]\n");{
-                Member prev = null;
-                for (int i = 0; i < guests.getSize(); i++) {
-                    if (!guests.getMembers()[i].equals(prev))
-                        sb.append("   " + guests.getMembers()[i] + "\n");
-                    prev = guests.getMembers()[i];
-                }
-            }
-        }
-        return sb.toString();
     }
 }

@@ -1,3 +1,8 @@
+package fitnessdb;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  * An Object representation of a Date.
  * Range of valid date values are from 1/1/1900
@@ -7,12 +12,6 @@
  *
  * @author Danny Onuorah, Adeola Asimolowo
  */
-
-package fitnessdb;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 public class Date implements Comparable<Date> {
     public final int NUM_OF_MONTHS = 12;
     public final int MAX_DAYS = 31;
@@ -21,7 +20,6 @@ public class Date implements Comparable<Date> {
     private int year;
     private int month;
     private int day;
-
 
     /**
      * Constructs a Date object with the specified year, month, and day.
@@ -36,6 +34,11 @@ public class Date implements Comparable<Date> {
         this.day = day;
     }
 
+    /**
+     * Constructs a Date object with the specified year, month, and day.
+     *
+     * @param date date formatted as MM/DD/YYYY
+     */
     public Date(String date) {
         String[] nums = date.split("/");
         this.month = Integer.parseInt(nums[0]);
@@ -43,27 +46,39 @@ public class Date implements Comparable<Date> {
         this.year = Integer.parseInt(nums[2]);
     }
 
+    /**
+     * Returns the year of the current date.
+     *
+     * @return the year
+     */
     public int getYear() {
         return year;
     }
 
+    /**
+     * Returns the month of the current date.
+     *
+     * @return the month
+     */
     public int getMonth() {
         return month;
     }
 
+    /**
+     * Returns the day of the current date.
+     *
+     * @return the day
+     */
     public int getDay() {
         return day;
     }
 
-    public Date addDays(int days) {
-        GregorianCalendar calendar = new GregorianCalendar(this.year, this.month - 1, this.day);
-        calendar.add(Calendar.DAY_OF_MONTH, days);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int year = calendar.get(Calendar.YEAR);
-        return new Date(year, month, day);
-    }
-
+    /**
+     * Adds a number of months to the current Data object.
+     *
+     * @param months number of months to add
+     * @return newly created sum date
+     */
     public Date addMonths(int months) {
         GregorianCalendar calendar = new GregorianCalendar(this.year, this.month - 1, this.day);
         calendar.add(Calendar.MONTH, months);
@@ -73,10 +88,15 @@ public class Date implements Comparable<Date> {
         return new Date(year, month, day);
     }
 
+    /**
+     * Adds a number of years to the current Data object.
+     *
+     * @param years number of years to add
+     * @return newly created sum date
+     */
     public Date addYears(int years) {
         return new Date(this.year + years, this.month, this.day);
     }
-
 
 
     /**
@@ -137,9 +157,6 @@ public class Date implements Comparable<Date> {
     /**
      * Checks if the given year, month, and day form a valid date.
      *
-     * @param year  The year to be checked.
-     * @param month The month to be checked.
-     * @param day   The day to be checked.
      * @return True if the date is valid; otherwise, false.
      */
     public boolean isValid() {
@@ -163,13 +180,14 @@ public class Date implements Comparable<Date> {
         }
     }
 
-    public boolean isExpired(){
+    public boolean isExpired() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1; // Months start from 0, so we add 1
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         return compareTo(new Date(year, month, dayOfMonth)) <= 0; //true if date is expired, false if not.
     }
+
     /**
      * A main method for testing the Date class.
      *
