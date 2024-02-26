@@ -4,21 +4,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Main interface for managing all operations of the fitness franchise
+ *
+ * @author Danny Onuorah, Adeola Asimolowo
+ */
 
 public class StudioManager {
     private MemberList memberlist;
     private Schedule schedule;
 
-    private String commandAdd(String[] response) {
-        String fname = response[1];
-        String lname = response[2];
+    /**
+     * Adds a new user to the database
+     *
+     * @param request [AB|AF|AP, first name, last name, dob, location]
+     * @return string response detailing the successful add or error message
+     */
+    private String commandAdd(String[] request) {
+        String fname = request[1];
+        String lname = request[2];
         Date dob;
         try {
-            dob = new Date(response[3]);
+            dob = new Date(request[3]);
         } catch (NumberFormatException e) {
             return "The date contains characters.";
         }
-        Location location = Location.getLocation(response[4]);
+        Location location = Location.getLocation(request[4]);
         Profile profile = new Profile(fname, lname, dob);
 
         if (!dob.isValid()) {
@@ -29,33 +40,37 @@ public class StudioManager {
             return String.format("DOB %s: must be 18 or older to join!", dob);
         }
         if (location == null) {
-            return String.format("%s: invalid studio location!", response[4]);
+            return String.format("%s: invalid studio location!", request[4]);
         }
 
-        if (response[0].equals("AB") && memberlist.add(new Basic(profile, Date.todayDate().addMonths(1), location))) {
+        if (request[0].equals("AB") && memberlist.add(new Basic(profile, Date.todayDate().addMonths(1), location))) {
             return String.format("%s %s added.", fname, lname);
-        } else if (response[0].equals("AF") && memberlist.add(new Family(profile, Date.todayDate().addMonths(3), location)))
+        } else if (request[0].equals("AF") && memberlist.add(new Family(profile, Date.todayDate().addMonths(3), location)))
             return String.format("%s %s added.", fname, lname);
-        else if (response[0].equals("AP") && memberlist.add(new Premium(profile, Date.todayDate().addYears(1), location)))
+        else if (request[0].equals("AP") && memberlist.add(new Premium(profile, Date.todayDate().addYears(1), location)))
             return String.format("%s %s added.", fname, lname);
         else {
             return String.format("%s %s is already in the member database.", fname, lname);
         }
     }
 
-    //C Bill Scanlan 5/1/1999
-    private String commandC(String[] response) {
-
-        String fname = response[1];
-        String lname = response[2];
+    /**
+     * Removes a user from the database
+     *
+     * @param request [C, first name, last name, dob]
+     * @return string response detailing the successful removal or error message
+     */
+    private String commandC(String[] request) {
+        String fname = request[1];
+        String lname = request[2];
         Date dob;
         try {
-            dob = new Date(response[3]);
+            dob = new Date(request[3]);
         } catch (NumberFormatException e) {
             return "The date contains characters.";
         }
-        Profile profile = new Profile(fname, lname, dob);
 
+        Profile profile = new Profile(fname, lname, dob);
         Member member = new Member(profile);
 
         if (memberlist.remove(member)) {
@@ -64,6 +79,11 @@ public class StudioManager {
             return String.format("%s %s is not in the member database.", fname, lname);
     }
 
+    /**
+     * Prints the memberlist or fitness attendance
+     *
+     * @param s field to print (S | PM | PC | PF)
+     */
     private void commandPrint(String s) {
         switch (s) {
             case "S" -> System.out.println(schedule.listString());
@@ -73,7 +93,12 @@ public class StudioManager {
         }
     }
 
-    //R cardio Jennifer somerville Roy Brooks 8/8/1977
+    /**
+     * Records the attendance of a user for a fitness class
+     *
+     * @param request [R||RG, offer, instructor, location, first name, last name, dob]
+     * @return string response detailing the successful recording or error message
+     */
     private String commandRecord(String[] request) {
         boolean isGuest = request[0].equals("RG");
 
@@ -90,6 +115,7 @@ public class StudioManager {
         if (location == null) {
             return String.format("%s - invalid studio location.", request[3]);
         }
+
         FitnessClass target = schedule.findClass(new FitnessClass(offer, instructor, location));
         if (target == null) {
             return String.format("%s by %s does not exist at %s", request[1], request[2], request[3]);
@@ -107,7 +133,8 @@ public class StudioManager {
         } else if (member.isExpired()) {
             return (String.format("%s %s %s membership expired.", fname, lname, dob));
         }
-        if (!isGuest) {
+
+        if (!isGuest) { //Handle restriction checking for members
             if (member instanceof Basic && !location.equals(member.getHomeStudio())) {
                 return (String.format("%s %s is attending a class at %s - [BASIC] home studio at %s", fname, lname, location.name(), member.getHomeStudio().name()));
             }
@@ -124,7 +151,7 @@ public class StudioManager {
             } else {
                 return String.format("%s %s is already in the class.", fname, lname);
             }
-        } else {
+        } else { //Handle restriction checking for guests
             if (member instanceof Basic) {
                 return (String.format("%s %s [BASIC] - no guest pass.", member.getProfile().getFname(), member.getProfile().getLname()));
             } else if (!member.canGuest()) {
@@ -138,13 +165,16 @@ public class StudioManager {
                 return String.format("%s %s (guest) attendance recorded %s at %s", fname, lname, offer, location);
             }
         }
-
     }
 
-    //U Pilates KIM FRANKLIN Mary Lindsey 12/1/1989
+    /**
+     * Updates the attendance of a user for a fitness class
+     *
+     * @param request [U||UG, offer, instructor, location, first name, last name, dob]
+     * @return string response detailing the successful update or error message
+     */
     private String commandUpdate(String[] request) {
         boolean isGuest = request[0].equals("UG");
-
         Offer offer = Offer.getOffer(request[1]);
         Instructor instructor = Instructor.getInstructor(request[2]);
         Location location = Location.getLocation(request[3]);
@@ -168,10 +198,15 @@ public class StudioManager {
         } else {
             target.removeGuest(member);
             return String.format("%s %s (guest) is removed from %s, %s, %s", fname, lname, target, target.getStudio().getZipCode(), target.getStudio().getCounty());
-
         }
     }
 
+    /**
+     * Handles all incoming input, processes commands, and returns command response
+     *
+     * @param inputString inputstring entered from user.
+     * @return corresponding String from command function called.
+     */
     private String commandHandler(String inputString) {
         String[] request = inputString.split(" ");
         String command = request[0];
@@ -204,6 +239,9 @@ public class StudioManager {
         };
     }
 
+    /**
+     * Loads fitness members from file
+     */
     private void loadMembers(File file) {
         try {
             memberlist.load(file);
@@ -218,6 +256,9 @@ public class StudioManager {
         }
     }
 
+    /**
+     * Loads class schedule from file
+     */
     private void loadSchedule(File file) {
         try {
             schedule.load(file);
@@ -232,6 +273,9 @@ public class StudioManager {
         }
     }
 
+    /**
+     * Enter point of the software
+     */
     public void run() {
         memberlist = new MemberList();
         loadMembers(new File("data/memberList.txt"));
@@ -242,7 +286,6 @@ public class StudioManager {
         System.out.println("Studio Manager is up running...\n");
 
         Scanner input = new Scanner(System.in);
-
         while (input.hasNext()) {
             String line = input.nextLine();
             if (line.trim().isEmpty()) {
